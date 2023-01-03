@@ -1,10 +1,11 @@
 import React, { FunctionComponent, ReactNode } from 'react'
 
 const Button:FunctionComponent<{
-    children:ReactNode
-}> = ({children}) => {
+    children:ReactNode,
+    onClick:React.MouseEventHandler<HTMLButtonElement>
+}> = ({children,onClick,...other}) => {
   return (
-    <button className='p-5 m-5 border rounded border-black'>{children}</button>
+    <button onClick={onClick} className='p-5 m-5 border rounded border-black'>{children}</button>
   )
 }
 
