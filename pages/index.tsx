@@ -7,6 +7,11 @@ import ImageContainer from "../components/ImageContainer";
 
 
 export default function Home() {
+
+  const imageCallback=()=>{
+    
+  }
+
   return (
     <>
       <Head>
@@ -17,7 +22,7 @@ export default function Home() {
       </Head>
       <main>
         <h1 className="text-3xl font-bold m-5">Glaucoma Detector</h1>
-        <ImageContainer/>
+        <ImageContainer updateFileCb={imageCallback}/>
       </main>
     </>
   );
