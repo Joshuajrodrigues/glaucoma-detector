@@ -8,10 +8,10 @@ import Card from "../components/steps/Card";
 import CardContainer from "../components/steps/CardContainer";
 
 export default function Home() {
-  const [fundas, setFundas] = useState<File[]>([]);
+  const [fundasDisplay, setFundasDisplay] = useState<File[]>([]);
   const imageCallback = (filesArray: File[]) => {
     console.log("imageCallback", filesArray);
-    setFundas(filesArray);
+    setFundasDisplay(filesArray);
   };
 
   return (
@@ -29,11 +29,11 @@ export default function Home() {
         <h1 className="text-3xl font-bold m-5">Glaucoma Detector</h1>
         <div
           className={
-            "flex justify-center items-center md:w-full lg:w-1/2 h-80 p-5 m-5 border-black rounded outline-dashed "
+            "flex relative justify-center items-center md:w-full lg:w-1/2 h-80 p-5 m-5 border-black rounded outline-dashed "
           }
         >
-          {Object.keys(fundas).map((fileName, index) => {
-            let file = fundas[index];
+          {Object.keys(fundasDisplay).map((fileName, index) => {
+            let file = fundasDisplay[index];
             let isImageFile = file.type.split("/")[0] === "image";
 
             return (
@@ -52,7 +52,7 @@ export default function Home() {
             );
           })}
         </div>
-        { <CardContainer />}
+        <CardContainer imageCallback={imageCallback} />
       </main>
     </>
   );
