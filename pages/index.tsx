@@ -8,8 +8,8 @@ import ImageContainer from "../components/ImageContainer";
 
 export default function Home() {
 
-  const imageCallback=()=>{
-    
+  const imageCallback = (filesArray: File[]) => {
+    console.log("imageCallback", filesArray)
   }
 
   return (
@@ -22,7 +22,7 @@ export default function Home() {
       </Head>
       <main>
         <h1 className="text-3xl font-bold m-5">Glaucoma Detector</h1>
-        <ImageContainer updateFileCb={imageCallback}/>
+        <ImageContainer instructions="Drop Your Image Here OR" multiple={false} updateFileCb={imageCallback} />
       </main>
     </>
   );
