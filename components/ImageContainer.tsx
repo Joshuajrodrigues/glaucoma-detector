@@ -80,25 +80,7 @@ const ImageContainer: FunctionComponent<{
               />
             </>
           )}
-          {Object.keys(files).map((fileName, index) => {
-            let file = files[fileName];
-            let isImageFile = file.type.split("/")[0] === "image";
-
-            return (
-              <section
-                className="w-full h-full border-none absolute top-0 bottom-0 left-0 right-0 "
-                key={fileName}
-              >
-                  {isImageFile && (
-                    <img
-                      className="w-full h-full object-cover"
-                      src={URL.createObjectURL(file)}
-                      alt={`file preview ${index}`}
-                    />
-                  )}
-              </section>
-            );
-          })}
+        
         </div>
       </div>
     </section>
