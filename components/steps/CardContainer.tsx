@@ -2,10 +2,12 @@ import React, { FunctionComponent, useState } from "react";
 import Card from "./Card";
 import ImageContainer from "../ImageContainer";
 import Button from "../Button";
+import useFundas from "../../store/useFundas";
 
 const CardContainer: FunctionComponent<{
   imageCallback: (images: File[]) => void;
 }> = ({ imageCallback }) => {
+  const image = useFundas((state)=>state.image)
   const [fundas, setFundas] = useState<File[]>([]);
   const [completedDeck, setCompletedDeck] = useState<number[]>([]);
   const updateFileCb = (filesArray: File[]) => {
@@ -40,15 +42,16 @@ const CardContainer: FunctionComponent<{
       <Card
         completedDeck={completedDeck}
         handleNext={handleNext}
-        showNext={fundas.length > 0}
+        showNext={image.length > 0}
         title="Select Image"
         index={5}
       >
-        <ImageContainer
-          instructions="Drop Your Image Here OR"
-          multiple={false}
-          updateFileCb={updateFileCb}
-        />
+        <>
+        <p>
+          Upload your own fundas eye image or use one of our samples here.
+        </p>
+        <Button>Load Sample Fundas</Button>
+        </>
       </Card>
     </div>
   );

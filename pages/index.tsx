@@ -27,31 +27,11 @@ export default function Home() {
       </Head>
       <main className="">
         <h1 className="text-3xl font-bold m-5">Glaucoma Detector</h1>
-        <div
-          className={
-            "flex relative justify-center items-center md:w-full lg:w-1/2 h-80 p-5 m-5 border-black rounded outline-dashed "
-          }
-        >
-          {Object.keys(fundasDisplay).map((fileName, index) => {
-            let file = fundasDisplay[index];
-            let isImageFile = file.type.split("/")[0] === "image";
-
-            return (
-              <section
-                className="w-full h-full border-none absolute top-0 bottom-0 left-0 right-0 "
-                key={fileName}
-              >
-                {isImageFile && (
-                  <img
-                    className="w-full h-full object-cover"
-                    src={URL.createObjectURL(file)}
-                    alt={`file preview ${index}`}
-                  />
-                )}
-              </section>
-            );
-          })}
-        </div>
+        <ImageContainer
+          instructions="Drop Your Image Here OR"
+          multiple={false}
+          updateFileCb={imageCallback}
+        />
         <CardContainer imageCallback={imageCallback} />
       </main>
     </>
