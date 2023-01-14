@@ -1,4 +1,11 @@
-import React, { FunctionComponent, useEffect, useRef, useState } from "react";
+import React, {
+  FunctionComponent,
+  LegacyRef,
+  RefObject,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import Card from "./Card";
 import ImageContainer from "../ImageContainer";
 import Button from "../Button";
@@ -9,7 +16,8 @@ import { canvasPreview } from "../../utils/canvasPreview";
 
 const CardContainer: FunctionComponent<{
   imageCallback: (images: File[]) => void;
-}> = ({ imageCallback }) => {
+  imageRef:RefObject<HTMLImageElement>
+}> = ({ imageCallback, imageRef }) => {
   const image = useFundas((state) => state.image);
   const [fundas, setFundas] = useState<File[]>([]);
   const [completedDeck, setCompletedDeck] = useState<number[]>([]);
@@ -25,20 +33,18 @@ const CardContainer: FunctionComponent<{
     setCompletedDeck((prev) => [...prev, index]);
   };
   useEffect(() => {
-    if (cropedImageStats?.width && cropedImageStats?.height){
-
-      let img = new Image()
-      img.src = URL.createObjectURL(image[0])
-      img.onload =()=>{
-          if (previewCanvasRef.current) {
-          
-          canvasPreview(img, previewCanvasRef.current, cropedImageStats);
-        }
-      }
+    if (
+      cropedImageStats?.width &&
+      cropedImageStats?.height &&
+      previewCanvasRef.current &&imageRef&&
+      imageRef.current
+    ) {
+      canvasPreview(
+        imageRef.current,
+        previewCanvasRef.current,
+        cropedImageStats
+      );
     }
-    
-
-   
   }, [cropedImageStats]);
 
   return (

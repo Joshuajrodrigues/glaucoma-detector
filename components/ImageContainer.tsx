@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useRef, useState } from "react";
+import React, { FunctionComponent, LegacyRef, RefObject, useRef, useState } from "react";
 import Button from "./Button";
 import useFundas from "../store/useFundas";
 import "react-image-crop/dist/ReactCrop.css";
@@ -10,11 +10,13 @@ const ImageContainer: FunctionComponent<{
   accept?: string[];
   instructions?: string;
   label?: string;
+  imageRef?:RefObject<HTMLImageElement>
   maxFileSize?: number;
   updateFileCb: (files: File[]) => void;
   multiple?: boolean;
 }> = ({
   label,
+  imageRef,
   instructions,
   maxFileSize = MAX_SIZE,
   updateFileCb,
@@ -113,7 +115,8 @@ const ImageContainer: FunctionComponent<{
                     //className="w-full h-full object-cover"
                   >
                     <img
-                      className="w-full h-full object-cover"
+                    ref={imageRef}
+                      className="w-full h-full "
                       src={URL.createObjectURL(file)}
                       alt={`file preview ${index}`}
                     />
