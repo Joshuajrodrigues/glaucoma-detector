@@ -1,5 +1,6 @@
 import React, { FunctionComponent, useRef, useState } from "react";
 import Button from "./Button";
+import useFundas from "../store/useFundas";
 
 const MAX_SIZE = 16270840;
 type Files = { [key: string]: File };
@@ -20,11 +21,16 @@ const ImageContainer: FunctionComponent<{
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<Files>({});
+  const images = useFundas((state) => state.image);
+  const setImages = useFundas((state) => state.setImage);
+
   const handleUploadBtnClick = () => {
     fileInputRef.current?.click();
   };
-  const convertNestedObjectToArray = (nestedObj: Files) =>
-    Object.keys(nestedObj).map((key) => nestedObj[key]);
+
+  const convertNestedObjectToArray = (nestedObj: Files): File[] => {
+    return Object.keys(nestedObj).map((key) => nestedObj[key]);
+  };
 
   const addNewFiles = (newFiles: FileList) => {
     for (let file of newFiles) {
@@ -41,6 +47,7 @@ const ImageContainer: FunctionComponent<{
 
   const callUpdateFilesCb = (filesObj: Files) => {
     let filesArr = convertNestedObjectToArray(filesObj);
+    setImages(filesArr);
     updateFileCb(filesArr);
   };
 
@@ -54,9 +61,9 @@ const ImageContainer: FunctionComponent<{
       callUpdateFilesCb(updatedFiles);
     }
   };
+
   return (
     <section>
-      <label>{label}</label>
       <div
         className={
           "flex justify-center items-center md:w-full lg:w-1/2 h-80 p-5 m-5 border-black rounded outline-dashed "
@@ -64,9 +71,10 @@ const ImageContainer: FunctionComponent<{
       >
         <div className=" w-full h-full relative flex flex-col items-center ">
           <p className="p-5 m-5 w-56 rounded">{instructions}</p>
-
+          {/* Upload image */}
           {Object.keys(files).length === 0 && (
             <>
+              <label>{label}</label>
               <Button onClick={handleUploadBtnClick}>Upload File</Button>
               <input
                 className="w-full h-full border-none absolute top-0 bottom-0 left-0 right-0 opacity-0 "
@@ -80,7 +88,27 @@ const ImageContainer: FunctionComponent<{
               />
             </>
           )}
-        
+          
+          {/* Display image */}
+          {Object.keys(images).map((fileName, index) => {
+            let file = images[index];
+            let isImageFile = file.type.split("/")[0] === "image";
+
+            return (
+              <section
+                className="w-full h-full border-none absolute top-0 bottom-0 left-0 right-0 "
+                key={fileName}
+              >
+                {isImageFile && (
+                  <img
+                    className="w-full h-full object-cover"
+                    src={URL.createObjectURL(file)}
+                    alt={`file preview ${index}`}
+                  />
+                )}
+              </section>
+            );
+          })}
         </div>
       </div>
     </section>
