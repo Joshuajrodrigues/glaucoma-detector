@@ -3,6 +3,7 @@ import Button from "./Button";
 import useFundas from "../store/useFundas";
 import "react-image-crop/dist/ReactCrop.css";
 import ReactCrop, { Crop, PixelCrop } from "react-image-crop";
+import useCropComplete from "../store/useCropComplete";
 const MAX_SIZE = 16270840;
 type Files = { [key: string]: File };
 const ImageContainer: FunctionComponent<{
@@ -25,7 +26,8 @@ const ImageContainer: FunctionComponent<{
   const images = useFundas((state) => state.image);
   const setImages = useFundas((state) => state.setImage);
   const [crop, setCrop] = useState<Crop>();
-  const [completedCrop, setCompletedCrop] = useState<PixelCrop>()
+  const setCropInfo = useCropComplete((state)=>state.setImage)
+ 
   const handleUploadBtnClick = () => {
     fileInputRef.current?.click();
   };
@@ -107,7 +109,7 @@ const ImageContainer: FunctionComponent<{
                     crop={crop}
                     style={{"width":"100%","height":"100%"}}
                     onChange={(c) => setCrop(c)}
-                    onComplete={(c) => setCompletedCrop(c)}
+                    onComplete={(c) => setCropInfo(c)}
                     //className="w-full h-full object-cover"
                   >
                     <img
