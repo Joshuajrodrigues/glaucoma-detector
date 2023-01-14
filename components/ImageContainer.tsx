@@ -1,7 +1,8 @@
 import React, { FunctionComponent, useRef, useState } from "react";
 import Button from "./Button";
 import useFundas from "../store/useFundas";
-
+import "react-image-crop/dist/ReactCrop.css";
+import ReactCrop, { Crop, PixelCrop } from "react-image-crop";
 const MAX_SIZE = 16270840;
 type Files = { [key: string]: File };
 const ImageContainer: FunctionComponent<{
@@ -23,7 +24,8 @@ const ImageContainer: FunctionComponent<{
   const [files, setFiles] = useState<Files>({});
   const images = useFundas((state) => state.image);
   const setImages = useFundas((state) => state.setImage);
-
+  const [crop, setCrop] = useState<Crop>();
+  const [completedCrop, setCompletedCrop] = useState<PixelCrop>()
   const handleUploadBtnClick = () => {
     fileInputRef.current?.click();
   };
@@ -88,7 +90,7 @@ const ImageContainer: FunctionComponent<{
               />
             </>
           )}
-          
+
           {/* Display image */}
           {Object.keys(images).map((fileName, index) => {
             let file = images[index];
@@ -100,12 +102,22 @@ const ImageContainer: FunctionComponent<{
                 key={fileName}
               >
                 {isImageFile && (
-                  <img
-                    className="w-full h-full object-cover"
-                    src={URL.createObjectURL(file)}
-                    alt={`file preview ${index}`}
-                  />
+                  <ReactCrop
+                    circularCrop
+                    crop={crop}
+                    style={{"width":"100%","height":"100%"}}
+                    onChange={(c) => setCrop(c)}
+                    onComplete={(c) => setCompletedCrop(c)}
+                    //className="w-full h-full object-cover"
+                  >
+                    <img
+                      className="w-full h-full object-cover"
+                      src={URL.createObjectURL(file)}
+                      alt={`file preview ${index}`}
+                    />
+                  </ReactCrop>
                 )}
+                  
               </section>
             );
           })}
