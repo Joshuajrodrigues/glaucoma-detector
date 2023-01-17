@@ -1,24 +1,21 @@
-import React, {
-  FunctionComponent,
-  LegacyRef,
-  RefObject,
+import {
+  FunctionComponent, RefObject,
   useEffect,
   useRef,
-  useState,
+  useState
 } from "react";
+import useCropComplete from "../store/useCropComplete";
+import useFundas from "../store/useFundas";
+import { canvasPreview } from "../utils/canvasPreview";
+import Button from "./Button";
 import Card from "./Card";
-import ImageContainer from "../ImageContainer";
-import Button from "../Button";
-import useFundas from "../../store/useFundas";
-import useCropComplete from "../../store/useCropComplete";
-import { useDebounceEffect } from "../../hooks/useDebounceEffect";
-import { canvasPreview } from "../../utils/canvasPreview";
 
 const CardContainer: FunctionComponent<{
   imageCallback: (images: File[]) => void;
-  imageRef:RefObject<HTMLImageElement>
+  imageRef: RefObject<HTMLImageElement>
 }> = ({ imageCallback, imageRef }) => {
   const image = useFundas((state) => state.image);
+  const setImage = useFundas((state) => state.setImage)
   const [fundas, setFundas] = useState<File[]>([]);
   const [completedDeck, setCompletedDeck] = useState<number[]>([]);
   const cropedImageStats = useCropComplete((state) => state.image);
@@ -32,18 +29,31 @@ const CardContainer: FunctionComponent<{
     console.log("handleNext", index);
     setCompletedDeck((prev) => [...prev, index]);
   };
+  const handleCrop = () => {
+
+  }
   useEffect(() => {
     if (
       cropedImageStats?.width &&
       cropedImageStats?.height &&
-      previewCanvasRef.current &&imageRef&&
+      previewCanvasRef.current && imageRef &&
       imageRef.current
     ) {
       canvasPreview(
         imageRef.current,
         previewCanvasRef.current,
         cropedImageStats
-      );
+      ).then((resp) => {
+        let fileObject: File
+        resp.toBlob((blob) => {
+          if (blob) {
+            fileObject = new File([blob], "blsa", { type: "image/jpg" });
+            console.log("fileObject", fileObject);
+            setImage([fileObject])
+          }
+        })
+
+      })
     }
   }, [cropedImageStats]);
 
@@ -70,7 +80,7 @@ const CardContainer: FunctionComponent<{
             height: "100%",
           }}
         />
-        <Button>Crop</Button>
+        <Button onClick={handleCrop}>Crop</Button>
       </Card>
       <Card
         completedDeck={completedDeck}

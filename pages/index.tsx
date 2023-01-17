@@ -4,8 +4,8 @@ import { Inter } from "@next/font/google";
 import styles from "../styles/Home.module.css";
 import ImageContainer from "../components/ImageContainer";
 import { LegacyRef, useRef, useState } from "react";
-import Card from "../components/steps/Card";
-import CardContainer from "../components/steps/CardContainer";
+import Card from "../components/Card";
+import CardContainer from "../components/CardContainer";
 
 export default function Home() {
   const [fundasDisplay, setFundasDisplay] = useState<File[]>([]);

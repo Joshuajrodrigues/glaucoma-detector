@@ -6,6 +6,7 @@ import ReactCrop, { Crop, PixelCrop } from "react-image-crop";
 import useCropComplete from "../store/useCropComplete";
 const MAX_SIZE = 16270840;
 type Files = { [key: string]: File };
+
 const ImageContainer: FunctionComponent<{
   accept?: string[];
   instructions?: string;
