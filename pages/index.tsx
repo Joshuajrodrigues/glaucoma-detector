@@ -8,13 +8,10 @@ import Card from "../components/Card";
 import CardContainer from "../components/CardContainer";
 
 export default function Home() {
-  const [fundasDisplay, setFundasDisplay] = useState<File[]>([]);
+
   const imgRef = useRef<HTMLImageElement>(null);
   
-  const imageCallback = (filesArray: File[]) => {
-    console.log("imageCallback", filesArray);
-    setFundasDisplay(filesArray);
-  };
+
 
   return (
     <>
@@ -33,9 +30,9 @@ export default function Home() {
           imageRef={imgRef}
           instructions="Drop Your Image Here OR"
           multiple={false}
-          updateFileCb={imageCallback}
+
         />
-        <CardContainer imageRef={imgRef} imageCallback={imageCallback} />
+        <CardContainer imageRef={imgRef} />
       </main>
     </>
   );

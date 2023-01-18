@@ -4,6 +4,7 @@ import useFundas from "../store/useFundas";
 import "react-image-crop/dist/ReactCrop.css";
 import ReactCrop, { Crop, PixelCrop } from "react-image-crop";
 import useCropComplete from "../store/useCropComplete";
+import useSteps from "../store/useSteps";
 const MAX_SIZE = 16270840;
 type Files = { [key: string]: File };
 
@@ -13,14 +14,12 @@ const ImageContainer: FunctionComponent<{
   label?: string;
   imageRef?:RefObject<HTMLImageElement>
   maxFileSize?: number;
-  updateFileCb: (files: File[]) => void;
   multiple?: boolean;
 }> = ({
   label,
   imageRef,
   instructions,
   maxFileSize = MAX_SIZE,
-  updateFileCb,
   multiple = false,
   accept = [".jpg", ".png"],
 }) => {
@@ -30,7 +29,7 @@ const ImageContainer: FunctionComponent<{
   const setImages = useFundas((state) => state.setImage);
   const [crop, setCrop] = useState<Crop>();
   const setCropInfo = useCropComplete((state)=>state.setImage)
- 
+  const { setSteps, steps } = useSteps((state) => state)
   const handleUploadBtnClick = () => {
     fileInputRef.current?.click();
   };
@@ -55,7 +54,8 @@ const ImageContainer: FunctionComponent<{
   const callUpdateFilesCb = (filesObj: Files) => {
     let filesArr = convertNestedObjectToArray(filesObj);
     setImages(filesArr);
-    updateFileCb(filesArr);
+    setSteps([5])
+
   };
 
   const handleNewFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
