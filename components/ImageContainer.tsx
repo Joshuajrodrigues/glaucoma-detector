@@ -127,12 +127,13 @@ const ImageContainer: FunctionComponent<{
                     disabled={!isCropping}
                     style={{"width":"100%","height":"100%"}}
                     onChange={(c) => setCrop(c)}
+
                     onComplete={(c) => setCropInfo(c)}
                     //className="w-full h-full object-cover"
                   >
                     <img
                     ref={imageRef}
-                      className="w-full h-full "
+                      className={`w-full h-full `}
                       src={URL.createObjectURL(file)}
                       alt={`file preview ${index}`}
                     />
