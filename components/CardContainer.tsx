@@ -1,8 +1,7 @@
 import {
   FunctionComponent, RefObject,
   useEffect,
-  useRef,
-  useState
+  useRef
 } from "react";
 import useCropComplete from "../store/useCropComplete";
 import useFundas from "../store/useFundas";
@@ -17,42 +16,45 @@ const CardContainer: FunctionComponent<{
 
 
 
-  const cropedImageStats = useCropComplete((state) => state.image);
+  const { cropImageProperties, setCroppedImage, croppedImage } = useCropComplete((state) => state);
+  const { setImage } = useFundas((state) => state)
   const { setSteps, steps } = useSteps((state) => state)
-
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
 
 
   useEffect(() => {
     if (
-      cropedImageStats?.width &&
-      cropedImageStats?.height &&
+      cropImageProperties?.width &&
+      cropImageProperties?.height &&
       previewCanvasRef.current && imageRef &&
       imageRef.current
     ) {
       canvasPreview(
         imageRef.current,
         previewCanvasRef.current,
-        cropedImageStats
+        cropImageProperties
       ).then((resp) => {
         let fileObject: File
         resp.toBlob((blob) => {
           if (blob) {
             fileObject = new File([blob], "blsa", { type: "image/jpg" });
             console.log("fileObject", fileObject);
+            setCroppedImage([fileObject])
           //  setImage([fileObject])
           }
         })
 
       })
     }
-  }, [cropedImageStats]);
+  }, [cropImageProperties]);
 
   const handleCrop = () => {
     console.log("i run", steps)
     let newSteps = steps
     newSteps.push(4)
     setSteps(newSteps)
+    setImage(croppedImage)
+
   }
   return (
     <div className="relative w-full h-full p-5 ">

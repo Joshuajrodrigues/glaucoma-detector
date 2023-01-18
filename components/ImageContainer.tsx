@@ -28,7 +28,7 @@ const ImageContainer: FunctionComponent<{
   const images = useFundas((state) => state.image);
   const setImages = useFundas((state) => state.setImage);
   const [crop, setCrop] = useState<Crop>();
-  const setCropInfo = useCropComplete((state)=>state.setImage)
+  const setCropInfo = useCropComplete((state) => state.setCropImageProperties)
   const { setSteps, steps } = useSteps((state) => state)
   const handleUploadBtnClick = () => {
     fileInputRef.current?.click();
