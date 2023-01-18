@@ -4,18 +4,16 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import useSteps from "../store/useSteps";
 import Button from "./Button";
 
 const Card: FunctionComponent<{
   title?: string;
   index: number;
-  completedDeck: number[];
+  isVisible: boolean
   children?: ReactNode;
-}> = ({ index, children, title, completedDeck }) => {
-  const [isVisible, setIsVisible] = useState(true);
-  useEffect(() => {
-    if (completedDeck.includes(index)) setIsVisible(false);
-  }, [completedDeck, index]);
+}> = ({ index, children, title, isVisible }) => {
+
   return (
     <div
       className={`flex flex-col items-center absolute bg-white h-96 ${index === 0

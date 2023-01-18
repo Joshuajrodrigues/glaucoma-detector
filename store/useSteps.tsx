@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 interface StepsState {
-    steps: number[] | [];
+    steps: number[];
     setSteps: (newImage: number[]) => void
 }
 

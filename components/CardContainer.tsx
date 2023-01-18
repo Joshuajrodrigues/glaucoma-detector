@@ -48,15 +48,20 @@ const CardContainer: FunctionComponent<{
     }
   }, [cropedImageStats]);
 
-
+  const handleCrop = () => {
+    console.log("i run", steps)
+    let newSteps = steps
+    newSteps.push(4)
+    setSteps(newSteps)
+  }
   return (
     <div className="relative w-full h-full p-5 ">
-      <Card completedDeck={steps} index={0} />
-      <Card completedDeck={steps} index={1} />
-      <Card completedDeck={steps} index={2} />
-      <Card completedDeck={steps} index={3} />
+      <Card isVisible={!steps.includes(0)} index={0} />
+      <Card isVisible={!steps.includes(1)} index={1} />
+      <Card isVisible={!steps.includes(2)} index={2} />
+      <Card isVisible={!steps.includes(3)} index={3} />
       <Card
-        completedDeck={steps}
+        isVisible={!steps.includes(4)}
         title="Crop Roi"
         index={4}
       >
@@ -71,10 +76,10 @@ const CardContainer: FunctionComponent<{
             height: "100%",
           }}
         />
-        <Button >Crop</Button>
+        <Button onClick={() => { handleCrop() }} >Crop</Button>
       </Card>
       <Card
-        completedDeck={steps}
+        isVisible={!steps.includes(5)}
         title="Select Image"
         index={5}
       >
