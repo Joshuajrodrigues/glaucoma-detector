@@ -50,6 +50,7 @@ export async function canvasPreview(
   // 1) Move the center of the image to the origin (0,0)
   ctx.translate(-centerX, -centerY)
   console.log(image,cropX,cropY)
+ // ctx.filter='contrast(1.8)'
   ctx.drawImage(
     image,
     0,

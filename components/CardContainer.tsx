@@ -74,10 +74,10 @@ const CardContainer: FunctionComponent<{
           ref={previewCanvasRef}
           style={{
             border: "1px solid black",
-            //objectFit: "contain",
-            width: cropImageProperties.width,
-            height: cropImageProperties.height,
-            borderRadius: "50%"
+            objectFit: "contain",
+            width: "320px",
+            height: "180px",
+            //orderRadius: "50%"
           }}
         />
         <Button onClick={() => { handleCrop() }} >Crop</Button>
