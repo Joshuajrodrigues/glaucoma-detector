@@ -1,4 +1,4 @@
-import React, { FunctionComponent, LegacyRef, RefObject, useRef, useState } from "react";
+import React, { FunctionComponent, LegacyRef, RefObject, useEffect, useRef, useState } from "react";
 import Button from "./Button";
 import useFundas from "../store/useFundas";
 import "react-image-crop/dist/ReactCrop.css";
@@ -29,7 +29,9 @@ const ImageContainer: FunctionComponent<{
   const setImages = useFundas((state) => state.setImage);
   const [crop, setCrop] = useState<Crop>();
   const setCropInfo = useCropComplete((state) => state.setCropImageProperties)
-  const { setSteps, steps } = useSteps((state) => state)
+  const isCropping = useCropComplete((state) => state.isCropping)
+  const setIsCropping = useCropComplete((state) => state.setIsCropping)
+  const { setSteps } = useSteps((state) => state)
   const handleUploadBtnClick = () => {
     fileInputRef.current?.click();
   };
@@ -38,6 +40,17 @@ const ImageContainer: FunctionComponent<{
     return Object.keys(nestedObj).map((key) => nestedObj[key]);
   };
 
+  useEffect(() => {
+    if (!isCropping) {
+      setCrop({
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+        unit: "px"
+      })
+    }
+  }, [isCropping])
   const addNewFiles = (newFiles: FileList) => {
     for (let file of newFiles) {
       if (file.size < maxFileSize) {
@@ -55,6 +68,7 @@ const ImageContainer: FunctionComponent<{
     let filesArr = convertNestedObjectToArray(filesObj);
     setImages(filesArr);
     setSteps([5])
+    setIsCropping(true)
 
   };
 
@@ -110,6 +124,7 @@ const ImageContainer: FunctionComponent<{
                   <ReactCrop
                     circularCrop
                     crop={crop}
+                    disabled={!isCropping}
                     style={{"width":"100%","height":"100%"}}
                     onChange={(c) => setCrop(c)}
                     onComplete={(c) => setCropInfo(c)}

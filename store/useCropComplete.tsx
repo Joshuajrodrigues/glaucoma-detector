@@ -7,6 +7,8 @@ interface CropState {
   resetCropImageProperties: () => void;
   croppedImage: File[] | [];
   setCroppedImage: (newImage: File[]) => void
+  isCropping: boolean,
+  setIsCropping: (bool: boolean) => void
 }
 
 export interface Crop {
@@ -24,6 +26,8 @@ const useCropComplete = create<CropState>()((set) => ({
   resetCropImageProperties: () => set(() => ({ cropImageProperties: defaultImage })),
   croppedImage: [],
   setCroppedImage: (newImage: File[]) => set(() => ({ croppedImage: newImage })),
+  isCropping: false,
+  setIsCropping: (bool) => set(() => ({ isCropping: bool }))
 }));
 
 export default useCropComplete;

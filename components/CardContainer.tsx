@@ -20,7 +20,7 @@ const CardContainer: FunctionComponent<{
   const { setImage } = useFundas((state) => state)
   const { setSteps, steps } = useSteps((state) => state)
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
-
+  const setIsCropping = useCropComplete((state) => state.setIsCropping)
 
   useEffect(() => {
     if (
@@ -54,6 +54,7 @@ const CardContainer: FunctionComponent<{
     newSteps.push(4)
     setSteps(newSteps)
     setImage(croppedImage)
+    setIsCropping(false)
 
   }
   return (
