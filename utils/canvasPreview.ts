@@ -71,8 +71,9 @@ export async function canvasPreview(
     let pix = imageData.data;
     for (var i = 0, n = pix.length; i < n; i += 4) {
       pix[i  ] = 0; // red
-      pix[i+1] = 255 - pix[i+1]; // green
+      //pix[i+1] = 255 - pix[i+1]; // green
       pix[i+2] = 0; // blue
+      pix[i+3] = 255
       // i+3 is alpha (the fourth element)
   }
   ctx.putImageData(imageData, 0, 0);
