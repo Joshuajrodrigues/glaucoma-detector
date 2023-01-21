@@ -51,8 +51,11 @@ export async function canvasPreview(
   ctx.translate(-centerX, -centerY)
   console.log(image,cropX,cropY)
  // ctx.filter='contrast(1.8)'
-  ctx.drawImage(
-    image,
+
+
+ //console.log("imageData",imageData)
+ ctx.drawImage(
+   image,
     0,
     0,
     image.naturalWidth,
@@ -62,8 +65,17 @@ export async function canvasPreview(
     image.naturalWidth,
     image.naturalHeight,
   )
-
-
+  
+     var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    //let data = imageData.data
+    let pix = imageData.data;
+    for (var i = 0, n = pix.length; i < n; i += 4) {
+      pix[i  ] = 0; // red
+      pix[i+1] = 255 - pix[i+1]; // green
+      pix[i+2] = 0; // blue
+      // i+3 is alpha (the fourth element)
+  }
+  ctx.putImageData(imageData, 0, 0);
   ctx.restore()
 
 

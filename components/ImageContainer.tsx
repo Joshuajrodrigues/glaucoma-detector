@@ -143,6 +143,12 @@ const ImageContainer: FunctionComponent<{
               </section>
             );
           })}
+
+          
+            {/* <canvas className=" bg-slate-500 w-full h-full"  id="image-editor">
+          
+            </canvas>
+           */}
         </div>
       </div>
     </section>

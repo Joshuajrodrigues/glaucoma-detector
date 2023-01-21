@@ -57,12 +57,18 @@ const CardContainer: FunctionComponent<{
     setIsCropping(false)
 
   }
+
+  const applyGreenChannel=()=>{
+
+  }
   return (
     <div className="relative w-full h-full p-5 ">
       <Card isVisible={!steps.includes(0)} index={0} />
       <Card isVisible={!steps.includes(1)} index={1} />
       <Card isVisible={!steps.includes(2)} index={2} />
-      <Card isVisible={!steps.includes(3)} index={3} />
+      <Card isVisible={!steps.includes(3)} index={3} >
+        <Button onClick={applyGreenChannel}>Apply green channel</Button>
+      </Card>
       <Card
         isVisible={!steps.includes(4)}
         title="Crop Roi"
