@@ -142,7 +142,7 @@ export async function canvasPreview(
   let disk =  new ImageData(diskImageData, imageData.width,imageData.height)
 
 
-  ctx.putImageData(disk, 0, 0);
+  ctx.putImageData(cup, 0, 0);
   ctx.restore();
 
   return canvas;
