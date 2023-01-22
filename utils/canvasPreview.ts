@@ -28,7 +28,7 @@ export async function canvasPreview(
   canvas.height = Math.floor(crop.height * scaleY * pixelRatio);
 
   ctx.scale(pixelRatio, pixelRatio);
-  ctx.imageSmoothingQuality = "high";
+  ctx.imageSmoothingEnabled=false
 
   const cropX = crop.x * scaleX;
   const cropY = crop.y * scaleY;
@@ -49,7 +49,7 @@ export async function canvasPreview(
   ctx.scale(scale, scale);
   // 1) Move the center of the image to the origin (0,0)
   ctx.translate(-centerX, -centerY);
-  console.log(image, cropX, cropY);
+  //console.log(image, cropX, cropY);
   // ctx.filter='contrast(1.8)'
 
   //console.log("imageData",imageData)
@@ -76,7 +76,19 @@ export async function canvasPreview(
     });
   }
 
+  function contrastImage(imgData:ImageData, contrast:number){  //input range [-100..100]
+    var d = imgData.data;
+    contrast = (contrast/100) + 1;  //convert to decimal & shift range: [0..2]
+    var intercept = 128 * (1 - contrast);
+    for(var i=0;i<d.length;i+=4){   //r,g,b,a
+        d[i] = d[i]*contrast + intercept;
+        d[i+1] = d[i+1]*contrast + intercept;
+        d[i+2] = d[i+2]*contrast + intercept;
+    }
+    return imgData;
+}
   let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  let contrasted = contrastImage(imageData,-40)
   
   let pix = imageData.data;
 
@@ -86,7 +98,7 @@ export async function canvasPreview(
     pix[i + 2] = 0;
     pix[i + 3] = 255;
   }
-  ctx.putImageData(imageData, 0, 0);
+  ctx.putImageData(contrasted, 0, 0);
   let cupImageData= new Uint8ClampedArray(pix.length).fill(0);
   let diskImageData=new Uint8ClampedArray(pix.length).fill(0);
   let cStr = 0;
@@ -130,7 +142,7 @@ export async function canvasPreview(
   let disk =  new ImageData(diskImageData, imageData.width,imageData.height)
 
 
-  ctx.putImageData(cup, 0, 0);
+  ctx.putImageData(disk, 0, 0);
   ctx.restore();
 
   return canvas;
