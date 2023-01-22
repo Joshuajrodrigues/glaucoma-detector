@@ -77,14 +77,23 @@ export async function canvasPreview(
   }
 
   let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  let cupImageData: ImageData;
-  let diskImageData: ImageData;
+  
   let pix = imageData.data;
+
+
+  for (var i = 0, n = pix.length; i < n; i += 4) {
+    pix[i] = 0;
+    pix[i + 2] = 0;
+    pix[i + 3] = 255;
+  }
+  ctx.putImageData(imageData, 0, 0);
+  let cupImageData= new Uint8ClampedArray(pix.length).fill(0);
+  let diskImageData=new Uint8ClampedArray(pix.length).fill(0);
   let cStr = 0;
   let cMin = arrayMin(pix);
   let cMax = arrayMax(pix);
   let median = pix[Math.floor(pix.length / 2)];
-  let greenArray = [];
+
 
   if (Math.hypot(cMin - median) === Math.hypot(cMax - median)) {
     cStr = median;
@@ -93,29 +102,8 @@ export async function canvasPreview(
   } else if (Math.hypot(cMin - median) > Math.hypot(cMax - median)) {
     cStr = median + Math.abs(median - cMin) / 2;
   }
-  // for i in range(width):
-  //   for j in range(height):
-  //       x = eye[i, j]  # (0,78,0)
-  //       coords = i, j
+  
 
-  //       cminx = (x[1]-cmin)**2
-  //       cmaxx = (x[1]-cmax)**2
-  //       cstrx = (x[1]-cstr)**2
-
-  //       uc1 = 1/((cminx/cminx)+(cminx/cmaxx)+(cminx/cstrx))
-  //       uc2 = 1/((cmaxx/cmaxx)+(cmaxx/cminx)+(cmaxx/cstrx))
-  //       uc3 = 1/((cstrx/cstrx)+(cstrx/cminx)+(cstrx/cmaxx))
-
-  //       if np.isnan(uc1) or np.isnan(uc2) or np.isnan(uc3):
-  //           continue
-  //       elif (uc1 > uc3) and (uc1 > uc2):
-  //           continue
-  //       elif (uc2 > uc1) and (uc2 > uc3):
-  //           img2.putpixel(coords, x)  # This is the cup cluster
-  //       else:
-  //           img3.putpixel(coords, x)  # This is the disc cluster
-  let testCup =[]
-  let testDisk =[]
 
   for (let i = 0; i < pix.length; i++) {
     let greenPixel = pix[i + 1];
@@ -129,25 +117,20 @@ export async function canvasPreview(
     if(isNaN(uc1) || isNaN(uc2) || isNaN(uc3)){
       continue
     }else if(uc1 > uc3 && uc1 > uc2){
-      testDisk.push(greenPixel)
+     continue
     }else if( uc2 > uc1 && uc2 > uc3){
-      testCup.push(greenPixel)
+      cupImageData[i+1]= greenPixel 
+      cupImageData[i + 3] = 255;
     }else{
-      //testDisk.push(greenPixel)
-      continue  
+      diskImageData[i+1]= greenPixel 
+      diskImageData[i + 3] = 255;
     }
   }
+  let cup = new ImageData(cupImageData, imageData.width,imageData.height)
+  let disk =  new ImageData(diskImageData, imageData.width,imageData.height)
 
 
-  for (var i = 0, n = pix.length; i < n; i += 4) {
-    pix[i] = 0;
-    pix[i + 2] = 0;
-    pix[i + 3] = 255;
-    greenArray.push(pix[i + 1]);
-  }
-
-  ctx.putImageData(imageData, 0, 0);
-
+  ctx.putImageData(cup, 0, 0);
   ctx.restore();
 
   return canvas;
