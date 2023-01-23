@@ -1,10 +1,20 @@
+import { PixelCrop } from "react-image-crop";
 
+const TO_RADIANS = Math.PI / 180;
 
 export async function canvasPreprocess(
     image: HTMLImageElement,
     canvas: HTMLCanvasElement,
 ) {
     const ctx = canvas.getContext("2d");
+    const scale = 1 
+    const rotate = 0
+    const crop ={
+        x:0,
+        y:0,
+        width:image.width,
+        height:image.height
+    }
     if (!ctx) throw new Error("No 2d context");
 
     function arrayMin(arr: Uint8ClampedArray) {
@@ -30,46 +40,90 @@ export async function canvasPreprocess(
         }
         return imgData;
     }
-    ctx.save();
     const scaleX = image.naturalWidth / image.width;
     const scaleY = image.naturalHeight / image.height;
     const pixelRatio = window.devicePixelRatio;
-    //canvas.width = Math.floor(2scaleX * pixelRatio);
-    //canvas.height = Math.floor(scaleY * pixelRatio);
-    //ctx.scale(pixelRatio, pixelRatio);
-    ctx.imageSmoothingEnabled = false
-
-    const cropX = scaleX;
-    const cropY = scaleY;
+    canvas.width = Math.floor(crop.width * scaleX * pixelRatio);
+    canvas.height = Math.floor(crop.height * scaleY * pixelRatio);
+    ctx.scale(pixelRatio, pixelRatio);
+    ctx.imageSmoothingEnabled=false
+    ctx.save();
+    const cropX = crop.x * scaleX;
+    const cropY = crop.y * scaleY;
+    const rotateRads = rotate * TO_RADIANS;
     const centerX = image.naturalWidth / 2;
     const centerY = image.naturalHeight / 2;
+    // 5) Move the crop origin to the canvas origin (0,0)
     ctx.translate(-cropX, -cropY);
     // 4) Move the origin to the center of the original position
     ctx.translate(centerX, centerY);
     // 3) Rotate around the origin
-    //ctx.rotate(rotateRads);
+    ctx.rotate(rotateRads);
     // 2) Scale the image
-    ctx.scale(1, 1);
+    ctx.scale(scale, scale);
     // 1) Move the center of the image to the origin (0,0)
     ctx.translate(-centerX, -centerY);
-
     ctx.drawImage(
         image,
         0,
         0,
+        image.naturalWidth,
+        image.naturalHeight,
+        0,
+        0,
+        image.naturalWidth,
+        image.naturalHeight
+      );
 
-    );
+    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-    // let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-    // let contrasted = contrastImage(imageData, -40) //invert for disk
-    // let pix = contrasted.data;
-    // for (var i = 0, n = pix.length; i < n; i += 4) {
-    //     pix[i] = 0;
-    //     pix[i + 2] = 0;
-    //     pix[i + 3] = 255; // make 0 for fuzzy
-    // }
-   // ctx.putImageData(contrasted, 0, 0);
+     let contrasted = contrastImage(imageData, -40) //invert for disk
+    let pix = contrasted.data;
+    for (var i = 0, n = pix.length; i < n; i += 4) {
+        pix[i] = 0;
+        pix[i + 2] = 0;
+        pix[i + 3] = 255; // make 0 for fuzzy
+    }
+   ctx.putImageData(contrasted, 0, 0);
+    let cupImageData = new Uint8ClampedArray(pix.length).fill(0);
+    let diskImageData = new Uint8ClampedArray(pix.length).fill(0);
+    let cStr = 0;
+    let cMin = arrayMin(pix);
+    let cMax = arrayMax(pix);
+    let median = pix[Math.floor(pix.length / 2)];
+    if (Math.hypot(cMin - median) === Math.hypot(cMax - median)) {
+        cStr = median;
+    } else if (Math.hypot(cMin - median) < Math.hypot(cMax - median)) {
+        cStr = median + Math.abs(cMax - median) / 2;
+    } else if (Math.hypot(cMin - median) > Math.hypot(cMax - median)) {
+        cStr = median + Math.abs(median - cMin) / 2;
+    }
+    for (let i = 0; i < pix.length; i++) {
+        let greenPixel = pix[i + 1];
+        let cminx = (greenPixel - cMin) ** 2;
+        let cmaxx = (greenPixel - cMax) ** 2;
+        let cstrx = (greenPixel - cStr) ** 2;
+        let uc1 = 1 / (cminx / cminx + cminx / cmaxx + cminx / cstrx);
+        let uc2 = 1 / (cmaxx / cmaxx + cmaxx / cminx + cmaxx / cstrx);
+        let uc3 = 1 / (cstrx / cstrx + cstrx / cminx + cstrx / cmaxx);
+    
+        if (isNaN(uc1) || isNaN(uc2) || isNaN(uc3)) {
+            continue
+        } else if (uc1 > uc3 && uc1 > uc2) {
+            continue
+        } else if (uc2 > uc1 && uc2 > uc3) {
+            cupImageData[i + 1] = greenPixel
+            cupImageData[i + 3] = 255;
+        } else {
+            diskImageData[i + 1] = greenPixel
+            diskImageData[i + 3] = 255;
+        }
+    }
+    let cup = new ImageData(cupImageData, imageData.width, imageData.height)
+    let disk = new ImageData(diskImageData, imageData.width, imageData.height)
+    
+    
+    ctx.putImageData(cup, 0, 0);
     ctx.restore();
 }
 
@@ -78,47 +132,7 @@ export async function canvasPreprocess(
 
 
 
-// let cupImageData = new Uint8ClampedArray(pix.length).fill(0);
-// let diskImageData = new Uint8ClampedArray(pix.length).fill(0);
-// let cStr = 0;
-// let cMin = arrayMin(pix);
-// let cMax = arrayMax(pix);
-// let median = pix[Math.floor(pix.length / 2)];
-
-
-// if (Math.hypot(cMin - median) === Math.hypot(cMax - median)) {
-//     cStr = median;
-// } else if (Math.hypot(cMin - median) < Math.hypot(cMax - median)) {
-//     cStr = median + Math.abs(cMax - median) / 2;
-// } else if (Math.hypot(cMin - median) > Math.hypot(cMax - median)) {
-//     cStr = median + Math.abs(median - cMin) / 2;
-// }
 
 
 
-// for (let i = 0; i < pix.length; i++) {
-//     let greenPixel = pix[i + 1];
-//     let cminx = (greenPixel - cMin) ** 2;
-//     let cmaxx = (greenPixel - cMax) ** 2;
-//     let cstrx = (greenPixel - cStr) ** 2;
-//     let uc1 = 1 / (cminx / cminx + cminx / cmaxx + cminx / cstrx);
-//     let uc2 = 1 / (cmaxx / cmaxx + cmaxx / cminx + cmaxx / cstrx);
-//     let uc3 = 1 / (cstrx / cstrx + cstrx / cminx + cstrx / cmaxx);
 
-//     if (isNaN(uc1) || isNaN(uc2) || isNaN(uc3)) {
-//         continue
-//     } else if (uc1 > uc3 && uc1 > uc2) {
-//         continue
-//     } else if (uc2 > uc1 && uc2 > uc3) {
-//         cupImageData[i + 1] = greenPixel
-//         cupImageData[i + 3] = 255;
-//     } else {
-//         diskImageData[i + 1] = greenPixel
-//         diskImageData[i + 3] = 255;
-//     }
-// }
-// let cup = new ImageData(cupImageData, imageData.width, imageData.height)
-// let disk = new ImageData(diskImageData, imageData.width, imageData.height)
-
-
-// ctx.putImageData(cup, 0, 0);

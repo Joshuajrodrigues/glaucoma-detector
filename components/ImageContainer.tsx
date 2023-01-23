@@ -112,7 +112,7 @@ const ImageContainer: FunctionComponent<{
       >
         <div className=" w-full h-full relative flex flex-col items-center ">
           {/* Upload image */}
-          {Object.keys(files).length === 0 && (
+          {Object.keys(files).length === 0 && images.length <=0 && (
             <>
               <p className="p-5 m-5 w-56 rounded">{instructions}</p>
               <label>{label}</label>
@@ -162,7 +162,7 @@ const ImageContainer: FunctionComponent<{
 
                   <canvas ref={preprocessCanvasRef} style={{
                     border: "1px solid black",
-                    objectFit: "contain",
+                    //objectFit: "contain",
                     width: "100%",
                     height: "100%",
                     //orderRadius: "50%"
