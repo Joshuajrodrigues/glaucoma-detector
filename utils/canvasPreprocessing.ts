@@ -30,7 +30,7 @@ export async function canvasPreprocess(
         }
         return imgData;
     }
-
+    console.log("ctx", ctx)
     // const scaleX = image.naturalWidth / image.width;
     // const scaleY = image.naturalHeight / image.height;
     const pixelRatio = window.devicePixelRatio;
@@ -71,23 +71,24 @@ export async function canvasPreprocess(
         image.naturalHeight
     );
 
+    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    console.log("contrasted", image)
+    // let contrasted = contrastImage(imageData, -40) //invert for disk
+    // let pix = contrasted.data;
+    // for (var i = 0, n = pix.length; i < n; i += 4) {
+    //     pix[i] = 0;
+    //     pix[i + 2] = 0;
+    //     pix[i + 3] = 255; // make 0 for fuzzy
+    // }
+    // ctx.putImageData(contrasted, 0, 0);
     ctx.restore();
 }
 
 
 
-// let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-// let contrasted = contrastImage(imageData, -40) //invert for disk
-
-// let pix = imageData.data;
 
 
-// for (var i = 0, n = pix.length; i < n; i += 4) {
-//     pix[i] = 0;
-//     pix[i + 2] = 0;
-//     pix[i + 3] = 255; // make 0 for fuzzy
-// }
-// ctx.putImageData(contrasted, 0, 0);
+
 // let cupImageData = new Uint8ClampedArray(pix.length).fill(0);
 // let diskImageData = new Uint8ClampedArray(pix.length).fill(0);
 // let cStr = 0;

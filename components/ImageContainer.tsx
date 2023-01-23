@@ -33,9 +33,9 @@ const ImageContainer: FunctionComponent<{
   const setCropInfo = useCropComplete((state) => state.setCropImageProperties)
   const isCropping = useCropComplete((state) => state.isCropping)
   const setIsCropping = useCropComplete((state) => state.setIsCropping)
-  const { setSteps } = useSteps((state) => state)
+  const setSteps = useSteps((state) => state.setSteps)
   const steps = useSteps((state) => state.steps)
-  const [touch, setTouch] = useState(false)
+
   const handleUploadBtnClick = () => {
     fileInputRef.current?.click();
   };
@@ -57,12 +57,15 @@ const ImageContainer: FunctionComponent<{
   }, [isCropping])
 
   useEffect(() => {
-    if (steps.includes(4) && preprocessCanvasRef?.current) {
-      let img = new Image()
-      img.src = URL.createObjectURL(images[0])
+    let img = new Image()
+    img.src = URL.createObjectURL(images[0])
+    img.onload = function () {
+      if (steps.includes(4) && preprocessCanvasRef?.current) {
       canvasPreprocess(img, preprocessCanvasRef.current)
+
     }
-  }, [steps, images, touch])
+    }
+  }, [steps, images, preprocessCanvasRef])
 
 
   const addNewFiles = (newFiles: FileList) => {
@@ -134,7 +137,7 @@ const ImageContainer: FunctionComponent<{
                 className="w-full h-full border-none absolute top-0 bottom-0 left-0 right-0 "
                 key={fileName}
               >
-                {(isImageFile && !steps.includes(4) && touch) ? (
+                {(isImageFile && !steps.includes(4)) ? (
                   <ReactCrop
                     circularCrop
                     crop={crop}
