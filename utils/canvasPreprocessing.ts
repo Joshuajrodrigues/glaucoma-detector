@@ -82,7 +82,7 @@ export async function canvasPreprocess(
     for (var i = 0, n = pix.length; i < n; i += 4) {
         pix[i] = 0;
         pix[i + 2] = 0;
-        pix[i + 3] = 255; // make 0 for fuzzy
+        pix[i + 3] = 255 // make 0 for fuzzy
     }
    ctx.putImageData(contrasted, 0, 0);
     let cupImageData = new Uint8ClampedArray(pix.length).fill(0);
