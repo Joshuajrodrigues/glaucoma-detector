@@ -33,13 +33,13 @@ export async function canvasPreprocess(
     console.log("ctx", ctx)
     // const scaleX = image.naturalWidth / image.width;
     // const scaleY = image.naturalHeight / image.height;
-    const pixelRatio = window.devicePixelRatio;
+   // const pixelRatio = window.devicePixelRatio;
 
-    //canvas.width = Math.floor(scaleX * pixelRatio);
+    // canvas.width = Math.floor(scaleX * pixelRatio);
     // canvas.height = Math.floor(scaleY * pixelRatio);
 
     //ctx.scale(pixelRatio, pixelRatio);
-    //ctx.imageSmoothingEnabled = false
+   // ctx.imageSmoothingEnabled = false
 
     // const cropX = scaleX;
     // const cropY = scaleY;
@@ -49,15 +49,15 @@ export async function canvasPreprocess(
 
     ctx.save();
 
-    //  ctx.translate(-cropX, -cropY);
+    //ctx.translate(-cropX, -cropY);
     // 4) Move the origin to the center of the original position
-    // ctx.translate(centerX, centerY);
+    //ctx.translate(centerX, centerY);
     // 3) Rotate around the origin
     //ctx.rotate(rotateRads);
     // 2) Scale the image
     // ctx.scale(scale, scale);
     // 1) Move the center of the image to the origin (0,0)
-    // ctx.translate(-centerX, -centerY);
+    //ctx.translate(-centerX, -centerY);
 
     ctx.drawImage(
         image,

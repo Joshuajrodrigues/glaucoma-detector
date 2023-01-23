@@ -57,13 +57,16 @@ const ImageContainer: FunctionComponent<{
   }, [isCropping])
 
   useEffect(() => {
-    let img = new Image()
-    img.src = URL.createObjectURL(images[0])
-    img.onload = function () {
-      if (steps.includes(4) && preprocessCanvasRef?.current) {
-      canvasPreprocess(img, preprocessCanvasRef.current)
+    if (images[0]) {
+      let img = new Image()
+      img.src = URL.createObjectURL(images[0])
+      img.onload = function () {
+        if (steps.includes(4) && preprocessCanvasRef?.current) {
+          canvasPreprocess(img, preprocessCanvasRef.current)
 
-    }
+        }
+      }
+
     }
   }, [steps, images, preprocessCanvasRef])
 
