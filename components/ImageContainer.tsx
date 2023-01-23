@@ -5,6 +5,7 @@ import "react-image-crop/dist/ReactCrop.css";
 import ReactCrop, { Crop, PixelCrop } from "react-image-crop";
 import useCropComplete from "../store/useCropComplete";
 import useSteps from "../store/useSteps";
+import { canvasPreprocess } from "../utils/canvasPreprocessing";
 const MAX_SIZE = 16270840;
 type Files = { [key: string]: File };
 
@@ -23,6 +24,7 @@ const ImageContainer: FunctionComponent<{
   multiple = false,
   accept = [".jpg", ".png"],
 }) => {
+  const preprocessCanvasRef = useRef<HTMLCanvasElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<Files>({});
   const images = useFundas((state) => state.image);
@@ -32,6 +34,8 @@ const ImageContainer: FunctionComponent<{
   const isCropping = useCropComplete((state) => state.isCropping)
   const setIsCropping = useCropComplete((state) => state.setIsCropping)
   const { setSteps } = useSteps((state) => state)
+  const steps = useSteps((state) => state.steps)
+  const [touch, setTouch] = useState(false)
   const handleUploadBtnClick = () => {
     fileInputRef.current?.click();
   };
@@ -51,6 +55,16 @@ const ImageContainer: FunctionComponent<{
       })
     }
   }, [isCropping])
+
+  useEffect(() => {
+    if (steps.includes(4) && preprocessCanvasRef?.current) {
+      let img = new Image()
+      img.src = URL.createObjectURL(images[0])
+      canvasPreprocess(img, preprocessCanvasRef.current)
+    }
+  }, [steps, images, touch])
+
+
   const addNewFiles = (newFiles: FileList) => {
     for (let file of newFiles) {
       if (file.size < maxFileSize) {
@@ -91,10 +105,10 @@ const ImageContainer: FunctionComponent<{
         }
       >
         <div className=" w-full h-full relative flex flex-col items-center ">
-          <p className="p-5 m-5 w-56 rounded">{instructions}</p>
           {/* Upload image */}
           {Object.keys(files).length === 0 && (
             <>
+              <p className="p-5 m-5 w-56 rounded">{instructions}</p>
               <label>{label}</label>
               <Button onClick={handleUploadBtnClick}>Upload File</Button>
               <input
@@ -120,7 +134,7 @@ const ImageContainer: FunctionComponent<{
                 className="w-full h-full border-none absolute top-0 bottom-0 left-0 right-0 "
                 key={fileName}
               >
-                {isImageFile && (
+                {(isImageFile && !steps.includes(4) && touch) ? (
                   <ReactCrop
                     circularCrop
                     crop={crop}
@@ -138,17 +152,25 @@ const ImageContainer: FunctionComponent<{
                       alt={`file preview ${index}`}
                     />
                   </ReactCrop>
-                )}
-                  
+                ) :
+
+                  <canvas ref={preprocessCanvasRef} style={{
+                    border: "1px solid black",
+                    objectFit: "contain",
+                    width: "320px",
+                    height: "280px",
+                    //orderRadius: "50%"
+                  }} >
+
+                  </canvas>
+
+                }
+
               </section>
             );
           })}
 
-          
-            {/* <canvas className=" bg-slate-500 w-full h-full"  id="image-editor">
-          
-            </canvas>
-           */}
+
         </div>
       </div>
     </section>

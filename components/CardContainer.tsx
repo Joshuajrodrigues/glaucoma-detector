@@ -40,7 +40,7 @@ const CardContainer: FunctionComponent<{
             fileObject = new File([blob], "blsa", { type: "image/jpg" });
             console.log("fileObject", fileObject);
             setCroppedImage([fileObject])
-          //  setImage([fileObject])
+            //  setImage([fileObject])
           }
         })
 
@@ -58,7 +58,7 @@ const CardContainer: FunctionComponent<{
 
   }
 
-  const applyGreenChannel=()=>{
+  const applyGreenChannel = () => {
 
   }
   return (
@@ -86,7 +86,10 @@ const CardContainer: FunctionComponent<{
             //orderRadius: "50%"
           }}
         />
-        <Button onClick={() => { handleCrop() }} >Crop</Button>
+        {
+          cropImageProperties.width > 0 &&
+          <Button onClick={() => { handleCrop() }} >Crop</Button>
+        }
       </Card>
       <Card
         isVisible={!steps.includes(5)}
