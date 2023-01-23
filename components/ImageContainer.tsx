@@ -163,8 +163,8 @@ const ImageContainer: FunctionComponent<{
                   <canvas ref={preprocessCanvasRef} style={{
                     border: "1px solid black",
                     objectFit: "contain",
-                    width: "320px",
-                    height: "280px",
+                    width: "100%",
+                    height: "100%",
                     //orderRadius: "50%"
                   }} >
 

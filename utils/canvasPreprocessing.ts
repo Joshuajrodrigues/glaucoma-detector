@@ -30,23 +30,6 @@ export async function canvasPreprocess(
         }
         return imgData;
     }
-    console.log("ctx", ctx)
-    // const scaleX = image.naturalWidth / image.width;
-    // const scaleY = image.naturalHeight / image.height;
-   // const pixelRatio = window.devicePixelRatio;
-
-    // canvas.width = Math.floor(scaleX * pixelRatio);
-    // canvas.height = Math.floor(scaleY * pixelRatio);
-
-    //ctx.scale(pixelRatio, pixelRatio);
-   // ctx.imageSmoothingEnabled = false
-
-    // const cropX = scaleX;
-    // const cropY = scaleY;
-
-    // const centerX = image.naturalWidth / 2;
-    // const centerY = image.naturalHeight / 2;
-
     ctx.save();
 
     //ctx.translate(-cropX, -cropY);
@@ -72,15 +55,15 @@ export async function canvasPreprocess(
     );
 
     let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    console.log("contrasted", image)
-    // let contrasted = contrastImage(imageData, -40) //invert for disk
-    // let pix = contrasted.data;
-    // for (var i = 0, n = pix.length; i < n; i += 4) {
-    //     pix[i] = 0;
-    //     pix[i + 2] = 0;
-    //     pix[i + 3] = 255; // make 0 for fuzzy
-    // }
-    // ctx.putImageData(contrasted, 0, 0);
+
+    let contrasted = contrastImage(imageData, -40) //invert for disk
+    let pix = contrasted.data;
+    for (var i = 0, n = pix.length; i < n; i += 4) {
+        pix[i] = 0;
+        pix[i + 2] = 0;
+        pix[i + 3] = 255; // make 0 for fuzzy
+    }
+    ctx.putImageData(contrasted, 0, 0);
     ctx.restore();
 }
 
