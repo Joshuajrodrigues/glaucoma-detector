@@ -31,39 +31,45 @@ export async function canvasPreprocess(
         return imgData;
     }
     ctx.save();
+    const scaleX = image.naturalWidth / image.width;
+    const scaleY = image.naturalHeight / image.height;
+    const pixelRatio = window.devicePixelRatio;
+    //canvas.width = Math.floor(2scaleX * pixelRatio);
+    //canvas.height = Math.floor(scaleY * pixelRatio);
+    //ctx.scale(pixelRatio, pixelRatio);
+    ctx.imageSmoothingEnabled = false
 
-    //ctx.translate(-cropX, -cropY);
+    const cropX = scaleX;
+    const cropY = scaleY;
+    const centerX = image.naturalWidth / 2;
+    const centerY = image.naturalHeight / 2;
+    ctx.translate(-cropX, -cropY);
     // 4) Move the origin to the center of the original position
-    //ctx.translate(centerX, centerY);
+    ctx.translate(centerX, centerY);
     // 3) Rotate around the origin
     //ctx.rotate(rotateRads);
     // 2) Scale the image
-    // ctx.scale(scale, scale);
+    ctx.scale(1, 1);
     // 1) Move the center of the image to the origin (0,0)
-    //ctx.translate(-centerX, -centerY);
+    ctx.translate(-centerX, -centerY);
 
     ctx.drawImage(
         image,
         0,
         0,
-        image.naturalWidth,
-        image.naturalHeight,
-        0,
-        0,
-        image.naturalWidth,
-        image.naturalHeight
+
     );
 
-    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    // let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-    let contrasted = contrastImage(imageData, -40) //invert for disk
-    let pix = contrasted.data;
-    for (var i = 0, n = pix.length; i < n; i += 4) {
-        pix[i] = 0;
-        pix[i + 2] = 0;
-        pix[i + 3] = 255; // make 0 for fuzzy
-    }
-    ctx.putImageData(contrasted, 0, 0);
+    // let contrasted = contrastImage(imageData, -40) //invert for disk
+    // let pix = contrasted.data;
+    // for (var i = 0, n = pix.length; i < n; i += 4) {
+    //     pix[i] = 0;
+    //     pix[i + 2] = 0;
+    //     pix[i + 3] = 255; // make 0 for fuzzy
+    // }
+   // ctx.putImageData(contrasted, 0, 0);
     ctx.restore();
 }
 
