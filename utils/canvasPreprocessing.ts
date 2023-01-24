@@ -18,13 +18,13 @@ export async function canvasPreprocess(
     if (!ctx) throw new Error("No 2d context");
 
     function arrayMin(arr: Uint8ClampedArray) {
-        return arr.reduce(function (p, v) {
+        return arr.filter((i) => i !== 0).reduce(function (p, v) {
             return p < v ? p : v;
         });
     }
 
     function arrayMax(arr: Uint8ClampedArray) {
-        return arr.reduce(function (p, v) {
+        return arr.filter((i) => i !== 255).reduce(function (p, v) {
             return p > v ? p : v;
         });
     }
@@ -39,6 +39,15 @@ export async function canvasPreprocess(
             d[i + 2] = d[i + 2] * contrast + intercept;
         }
         return imgData;
+    }
+    function findMedian(arr: number[]) {
+        arr.sort((a, b) => a - b);
+        let middle = Math.floor(arr.length / 2);
+        if (arr.length % 2 !== 0) {
+            return arr[middle];
+        } else {
+            return (arr[middle - 1] + arr[middle]) / 2;
+        }
     }
     const scaleX = image.naturalWidth / image.width;
     const scaleY = image.naturalHeight / image.height;
@@ -77,20 +86,23 @@ export async function canvasPreprocess(
 
     let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-     let contrasted = contrastImage(imageData, -40) //invert for disk
+    let contrasted = contrastImage(imageData, 0) //invert for disk
+    let greenpixelarr = []
     let pix = contrasted.data;
     for (var i = 0, n = pix.length; i < n; i += 4) {
         pix[i] = 0;
         pix[i + 2] = 0;
-        pix[i + 3] = 255 // make 0 for fuzzy
+        pix[i + 3] = 0// make 0 for fuzzy
+        greenpixelarr.push(pix[i + 1])
     }
    ctx.putImageData(contrasted, 0, 0);
     let cupImageData = new Uint8ClampedArray(pix.length).fill(0);
     let diskImageData = new Uint8ClampedArray(pix.length).fill(0);
+    let backID = new Uint8ClampedArray(pix.length).fill(0);
     let cStr = 0;
     let cMin = arrayMin(pix);
-    let cMax = arrayMax(pix);
-    let median = pix[Math.floor(pix.length / 2)];
+    let cMax = arrayMax(pix); 
+    let median = findMedian(greenpixelarr) 
     if (Math.hypot(cMin - median) === Math.hypot(cMax - median)) {
         cStr = median;
     } else if (Math.hypot(cMin - median) < Math.hypot(cMax - median)) {
@@ -98,6 +110,7 @@ export async function canvasPreprocess(
     } else if (Math.hypot(cMin - median) > Math.hypot(cMax - median)) {
         cStr = median + Math.abs(median - cMin) / 2;
     }
+    console.log({ cMax, cMin, cStr, median })
     for (let i = 0; i < pix.length; i++) {
         let greenPixel = pix[i + 1];
         let cminx = (greenPixel - cMin) ** 2;
@@ -121,7 +134,7 @@ export async function canvasPreprocess(
     }
     let cup = new ImageData(cupImageData, imageData.width, imageData.height)
     let disk = new ImageData(diskImageData, imageData.width, imageData.height)
-    
+    let back = new ImageData(backID, imageData.width, imageData.height)
     
     ctx.putImageData(cup, 0, 0);
     ctx.restore();
