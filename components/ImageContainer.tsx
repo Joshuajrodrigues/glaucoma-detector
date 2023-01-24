@@ -6,6 +6,7 @@ import ReactCrop, { Crop, PixelCrop } from "react-image-crop";
 import useCropComplete from "../store/useCropComplete";
 import useSteps from "../store/useSteps";
 import { canvasPreprocess } from "../utils/canvasPreprocessing";
+import useDisplayResult from "../store/useDisaplyResult";
 const MAX_SIZE = 16270840;
 type Files = { [key: string]: File };
 
@@ -35,7 +36,7 @@ const ImageContainer: FunctionComponent<{
   const setIsCropping = useCropComplete((state) => state.setIsCropping)
   const setSteps = useSteps((state) => state.setSteps)
   const steps = useSteps((state) => state.steps)
-
+  const imageToShow = useDisplayResult(s => s.imageToShow)
   const handleUploadBtnClick = () => {
     fileInputRef.current?.click();
   };
@@ -62,13 +63,13 @@ const ImageContainer: FunctionComponent<{
       img.src = URL.createObjectURL(images[0])
       img.onload = function () {
         if (steps.includes(4) && preprocessCanvasRef?.current) {
-          canvasPreprocess(img, preprocessCanvasRef.current)
+          canvasPreprocess(img, preprocessCanvasRef.current, imageToShow)
 
         }
       }
 
     }
-  }, [steps, images, preprocessCanvasRef])
+  }, [steps, images, preprocessCanvasRef, imageToShow])
 
 
   const addNewFiles = (newFiles: FileList) => {

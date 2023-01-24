@@ -4,6 +4,7 @@ import {
   useRef
 } from "react";
 import useCropComplete from "../store/useCropComplete";
+import useDisplayResult from "../store/useDisaplyResult";
 import useFundas from "../store/useFundas";
 import useSteps from "../store/useSteps";
 import { canvasPreview } from "../utils/canvasPreview";
@@ -21,7 +22,7 @@ const CardContainer: FunctionComponent<{
   const { setSteps, steps } = useSteps((state) => state)
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
   const setIsCropping = useCropComplete((state) => state.setIsCropping)
-
+  const setImageToShow = useDisplayResult((S) => S.setImage)
   useEffect(() => {
     if (
       cropImageProperties?.width &&
@@ -67,7 +68,9 @@ const CardContainer: FunctionComponent<{
       <Card isVisible={!steps.includes(1)} index={1} />
       <Card isVisible={!steps.includes(2)} index={2} />
       <Card isVisible={!steps.includes(3)} index={3} >
-        <Button onClick={applyGreenChannel}>Apply green channel</Button>
+        <Button onClick={() => setImageToShow("cup")}>Show Cup</Button>
+        <Button onClick={() => setImageToShow("disk")}>Show Disk</Button>
+        <Button onClick={applyGreenChannel}>Show Original</Button>
       </Card>
       <Card
         isVisible={!steps.includes(4)}

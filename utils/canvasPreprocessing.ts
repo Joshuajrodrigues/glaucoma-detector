@@ -5,7 +5,9 @@ const TO_RADIANS = Math.PI / 180;
 export async function canvasPreprocess(
     image: HTMLImageElement,
     canvas: HTMLCanvasElement,
+    cardToShow: string
 ) {
+
     const ctx = canvas.getContext("2d");
     const scale = 1 
     const rotate = 0
@@ -132,11 +134,14 @@ export async function canvasPreprocess(
             diskImageData[i + 3] = 255;
         }
     }
+
     let cup = new ImageData(cupImageData, imageData.width, imageData.height)
     let disk = new ImageData(diskImageData, imageData.width, imageData.height)
-    let back = new ImageData(backID, imageData.width, imageData.height)
-    
-    ctx.putImageData(cup, 0, 0);
+    if (cardToShow === 'cup') {
+        ctx.putImageData(cup, 0, 0);
+    } else if (cardToShow === 'disk') {
+        ctx.putImageData(disk, 0, 0);
+    }
     ctx.restore();
 }
 
