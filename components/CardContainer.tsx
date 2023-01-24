@@ -6,6 +6,7 @@ import {
 import useCropComplete from "../store/useCropComplete";
 import useDisplayResult from "../store/useDisaplyResult";
 import useFundas from "../store/useFundas";
+import useSample from "../store/useSample";
 import useSteps from "../store/useSteps";
 import { canvasPreview } from "../utils/canvasPreview";
 import Button from "./Button";
@@ -23,6 +24,7 @@ const CardContainer: FunctionComponent<{
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
   const setIsCropping = useCropComplete((state) => state.setIsCropping)
   const setImageToShow = useDisplayResult((S) => S.setImage)
+  const setLoadSample = useSample(s => s.setImage)
   useEffect(() => {
     if (
       cropImageProperties?.width &&
@@ -57,6 +59,10 @@ const CardContainer: FunctionComponent<{
     setImage(croppedImage)
     setIsCropping(false)
 
+  }
+
+  const loadSample = () => {
+    setLoadSample(true)
   }
 
   const applyGreenChannel = () => {
@@ -103,7 +109,7 @@ const CardContainer: FunctionComponent<{
           <p>
             Upload your own fundas eye image or use one of our samples here.
           </p>
-          <Button>Load Sample Fundas</Button>
+          <Button onClick={loadSample}>Load Sample Fundas</Button>
         </>
       </Card>
     </div>

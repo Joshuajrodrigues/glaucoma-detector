@@ -7,6 +7,7 @@ import useCropComplete from "../store/useCropComplete";
 import useSteps from "../store/useSteps";
 import { canvasPreprocess } from "../utils/canvasPreprocessing";
 import useDisplayResult from "../store/useDisaplyResult";
+import useSample from "../store/useSample";
 const MAX_SIZE = 16270840;
 type Files = { [key: string]: File };
 
@@ -37,6 +38,7 @@ const ImageContainer: FunctionComponent<{
   const setSteps = useSteps((state) => state.setSteps)
   const steps = useSteps((state) => state.steps)
   const imageToShow = useDisplayResult(s => s.imageToShow)
+  const loadSample = useSample(s => s.load)
   const handleUploadBtnClick = () => {
     fileInputRef.current?.click();
   };
@@ -104,6 +106,22 @@ const ImageContainer: FunctionComponent<{
     }
   };
 
+  useEffect(() => {
+    if (loadSample) {
+      fetch('/samples/160.jpg').then(async (resp) => {
+        console.log(resp);
+        let data = await resp.blob();
+        let metadata = {
+          type: 'image/jpeg'
+        };
+        let file = new File([data], "test.jpg", metadata);
+        setImages([file]);
+        setSteps([5])
+        setIsCropping(true)
+      })
+
+    }
+  }, [loadSample])
   return (
     <section>
       <div
@@ -113,7 +131,7 @@ const ImageContainer: FunctionComponent<{
       >
         <div className=" w-full h-full relative flex flex-col items-center ">
           {/* Upload image */}
-          {Object.keys(files).length === 0 && images.length <=0 && (
+          {Object.keys(files).length === 0 && images.length <= 0 && !loadSample && (
             <>
               <p className="p-5 m-5 w-56 rounded">{instructions}</p>
               <label>{label}</label>
