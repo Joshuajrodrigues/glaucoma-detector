@@ -89,6 +89,7 @@ export async function canvasPreprocess(
     let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
     let contrasted = contrastImage(imageData, 0) //invert for disk
+    if (cardToShow === "current") return
     let greenpixelarr = []
     let pix = contrasted.data;
     for (var i = 0, n = pix.length; i < n; i += 4) {
@@ -100,7 +101,6 @@ export async function canvasPreprocess(
    ctx.putImageData(contrasted, 0, 0);
     let cupImageData = new Uint8ClampedArray(pix.length).fill(0);
     let diskImageData = new Uint8ClampedArray(pix.length).fill(0);
-    let backID = new Uint8ClampedArray(pix.length).fill(0);
     let cStr = 0;
     let cMin = arrayMin(pix);
     let cMax = arrayMax(pix); 

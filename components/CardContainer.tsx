@@ -76,7 +76,7 @@ const CardContainer: FunctionComponent<{
       <Card isVisible={!steps.includes(3)} index={3} >
         <Button onClick={() => setImageToShow("cup")}>Show Cup</Button>
         <Button onClick={() => setImageToShow("disk")}>Show Disk</Button>
-        <Button onClick={applyGreenChannel}>Show Original</Button>
+        <Button onClick={() => setImageToShow("current")}>Show Original</Button>
       </Card>
       <Card
         isVisible={!steps.includes(4)}

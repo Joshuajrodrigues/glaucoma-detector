@@ -1,5 +1,5 @@
 import { create } from "zustand";
-type ImageToShowType = "cup" | "disk"
+type ImageToShowType = "cup" | "disk" | "current"
 interface FundasState {
     imageToShow: ImageToShowType
     setImage: (newImageToShow: ImageToShowType) => void
