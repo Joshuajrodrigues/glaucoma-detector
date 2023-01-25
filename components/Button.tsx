@@ -5,7 +5,7 @@ const Button:FunctionComponent<{
     onClick?:React.MouseEventHandler<HTMLButtonElement>
 }> = ({children,onClick,...other}) => {
   return (
-    <button onClick={onClick} className='p-5 m-5 border rounded border-black'>{children}</button>
+    <button onClick={onClick} className=' border-black border text-sm rounded-sm m-2 p-1 '>{children}</button>
   )
 }
 

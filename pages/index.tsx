@@ -24,15 +24,18 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="">
+      <main >
         <h1 className="text-3xl font-bold m-5">Glaucoma Detector</h1>
+        <div className="md:flex md:h-full">
+
         <ImageContainer
           imageRef={imgRef}
           instructions="Drop Your Image Here OR"
           multiple={false}
 
-        />
+          />
         <CardContainer imageRef={imgRef} />
+        </div>
       </main>
     </>
   );

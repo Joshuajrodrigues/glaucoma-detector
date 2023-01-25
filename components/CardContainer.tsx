@@ -69,14 +69,14 @@ const CardContainer: FunctionComponent<{
 
   }
   return (
-    <div className="relative w-full h-full p-5 ">
-      <Card isVisible={!steps.includes(0)} index={0} />
-      <Card isVisible={!steps.includes(1)} index={1} />
-      <Card isVisible={!steps.includes(2)} index={2} />
+    <div className="relative md:w-1/2 w-full h-full p-5 ">
       <Card isVisible={!steps.includes(3)} index={3} >
-        <Button onClick={() => setImageToShow("cup")}>Show Cup</Button>
-        <Button onClick={() => setImageToShow("disk")}>Show Disk</Button>
-        <Button onClick={() => setImageToShow("current")}>Show Original</Button>
+
+        <div className="flex">
+          <Button onClick={() => setImageToShow("cup")}>Show Cup</Button>
+          <Button onClick={() => setImageToShow("disk")}>Show Disk</Button>
+          <Button onClick={() => setImageToShow("current")}>Show Original</Button>
+        </div>
       </Card>
       <Card
         isVisible={!steps.includes(4)}

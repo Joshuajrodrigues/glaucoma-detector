@@ -14,8 +14,8 @@ export async function canvasPreprocess(
     const crop ={
         x:0,
         y:0,
-        width:image.width,
-        height:image.height
+        width: image.naturalWidth,
+        height: image.naturalHeight
     }
     if (!ctx) throw new Error("No 2d context");
 
