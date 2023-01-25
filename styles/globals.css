@@ -5,3 +5,10 @@
 .ReactCrop__child-wrapper{
     height: 100% !important;
 }
+body {
+    background: radial-gradient(rgb(0, 0, 0) 1%, transparent 9%) 0 0;
+    background-color: #ffffff;
+    background-size: 16px 16px;
+
+
+}

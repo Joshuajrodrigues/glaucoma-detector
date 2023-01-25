@@ -126,7 +126,7 @@ const ImageContainer: FunctionComponent<{
     <section className="md:w-1/2">
       <div
         className={
-          "flex justify-center items-center h-96 md:w-96 lg:w-5/6 md:h-96 md:ml-7 p-5 m-9 border-black rounded outline-dashed "
+          "flex bg-white justify-center items-center h-96 md:w-96 lg:w-5/6 md:h-96 md:ml-7 p-5 m-9 border-black rounded outline-dashed "
         }
       >
         <div className=" w-full h-full relative flex flex-col items-center ">

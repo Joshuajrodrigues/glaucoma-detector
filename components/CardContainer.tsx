@@ -109,7 +109,10 @@ const CardContainer: FunctionComponent<{
           <p>
             Upload your own fundas eye image or use one of our samples here.
           </p>
+          <div className=" mt-7">
           <Button onClick={loadSample}>Load Sample Fundas</Button>
+
+          </div>
         </>
       </Card>
     </div>
