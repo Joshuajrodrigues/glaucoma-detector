@@ -192,7 +192,7 @@ const ImageContainer: FunctionComponent<{
                       style={{
                         position:"absolute",
                         border: "1px solid black",
-                        //objectFit: "contain",
+                        objectFit: "contain",
                         width: "100%",
                         height: "100%",
                         //orderRadius: "50%"

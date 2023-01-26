@@ -57,7 +57,7 @@ export async function canvasPreprocess(
     canvas.width = Math.floor(crop.width * scaleX * pixelRatio);
     canvas.height = Math.floor(crop.height * scaleY * pixelRatio);
     ctx.scale(pixelRatio, pixelRatio);
-    ctx.imageSmoothingEnabled=false
+    ctx.imageSmoothingEnabled=true
     ctx.save();
     const cropX = crop.x * scaleX;
     const cropY = crop.y * scaleY;
