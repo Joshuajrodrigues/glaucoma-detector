@@ -9,7 +9,7 @@ export async function canvasPreprocess(
 ) {
 
     const ctx = canvas.getContext("2d");
-    const scale = 1 
+    const scale = 1
     const rotate = 0
     const crop = {
         x: 0,
@@ -88,59 +88,70 @@ export async function canvasPreprocess(
 
     let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-    let contrasted = contrastImage(imageData, 0) //invert for disk
+
     if (cardToShow === "current") return
-    let greenpixelarr = []
-    let pix = contrasted.data;
-    for (var i = 0, n = pix.length; i < n; i += 4) {
-        pix[i] = 0;
-        pix[i + 2] = 0;
-        pix[i + 3] = 0// make 0 for fuzzy
-        greenpixelarr.push(pix[i + 1])
-    }
-    ctx.putImageData(contrasted, 0, 0);
-    let cupImageData = new Uint8ClampedArray(pix.length).fill(0);
-    let diskImageData = new Uint8ClampedArray(pix.length).fill(0);
-    // number of clusters = 3
-    // number of strPts = 3-2 = 1
-    let cStr = 0;
-    let cMin = arrayMin(pix);
-    let cMax = arrayMax(pix);
-    let median = findMedian(greenpixelarr) 
 
-    if (Math.hypot(cMin - median) === Math.hypot(cMax - median)) {
-        cStr = median;
-    } else if (Math.hypot(cMin - median) < Math.hypot(cMax - median)) {
-        cStr = median + Math.abs(cMax - median) / 2;
-    } else if (Math.hypot(cMin - median) > Math.hypot(cMax - median)) {
-        cStr = median + Math.abs(median - cMin) / 2;
-    }
+    function fuzzy(imageData: Uint8ClampedArray) {
+        let pix = imageData;
 
-    console.log({ cMax, cMin, cStr, median })
-    for (let i = 0; i < pix.length; i++) {
-        let greenPixel = pix[i + 1];
-        let cminx = (greenPixel - cMin) ** 2;
-        let cmaxx = (greenPixel - cMax) ** 2;
-        let cstrx = (greenPixel - cStr) ** 2;
-        let uc1 = 1 / (cminx / cminx + cminx / cmaxx + cminx / cstrx);
-        let uc2 = 1 / (cmaxx / cmaxx + cmaxx / cminx + cmaxx / cstrx);
-        let uc3 = 1 / (cstrx / cstrx + cstrx / cminx + cstrx / cmaxx);
+        let cluster1 = new Uint8ClampedArray(pix.length).fill(0);
+        let cluster2 = new Uint8ClampedArray(pix.length).fill(0);
 
-        if (isNaN(uc1) || isNaN(uc2) || isNaN(uc3)) {
-            continue
-        } else if (uc1 > uc3 && uc1 > uc2) {
-            continue
-        } else if (uc2 > uc1 && uc2 > uc3) {
-            cupImageData[i + 1] = greenPixel
-            cupImageData[i + 3] = 255;
-        } else {
-            diskImageData[i + 1] = greenPixel
-            diskImageData[i + 3] = 255;
+        let greenpixelarr = []
+        for (var i = 0, n = pix.length; i < n; i += 4) {
+            pix[i] = 0;
+            pix[i + 2] = 0;
+            pix[i + 3] = 0// make 0 for fuzzy
+            greenpixelarr.push(pix[i + 1])
         }
+        // ctx.putImageData(imageData, 0, 0);
+
+        // number of clusters = 3
+        // number of strPts = 3-2 = 1
+        let cStr = 0;
+        let cMin = arrayMin(pix);
+        let cMax = arrayMax(pix);
+        let median = findMedian(greenpixelarr)
+
+        if (Math.hypot(cMin - median) === Math.hypot(cMax - median)) {
+            cStr = median;
+        } else if (Math.hypot(cMin - median) < Math.hypot(cMax - median)) {
+            cStr = median + Math.abs(cMax - median) / 2;
+        } else if (Math.hypot(cMin - median) > Math.hypot(cMax - median)) {
+            cStr = median + Math.abs(median - cMin) / 2;
+        }
+
+        // console.log({ cMax, cMin, cStr, median })
+        for (let i = 0; i < pix.length; i++) {
+            let greenPixel = pix[i + 1];
+            let cminx = (greenPixel - cMin) ** 2;
+            let cmaxx = (greenPixel - cMax) ** 2;
+            let cstrx = (greenPixel - cStr) ** 2;
+            let uc1 = 1 / (cminx / cminx + cminx / cmaxx + cminx / cstrx);
+            let uc2 = 1 / (cmaxx / cmaxx + cmaxx / cminx + cmaxx / cstrx);
+            let uc3 = 1 / (cstrx / cstrx + cstrx / cminx + cstrx / cmaxx);
+
+            if (isNaN(uc1) || isNaN(uc2) || isNaN(uc3)) {
+                continue
+            } else if (uc1 > uc3 && uc1 > uc2) {
+                continue
+            } else if (uc2 > uc1 && uc2 > uc3) {
+                cluster1[i + 1] = greenPixel
+                cluster1[i + 3] = 255;
+            } else {
+                cluster2[i + 1] = greenPixel
+                cluster2[i + 3] = 255;
+            }
+        }
+
+        return { cluster1, cluster2 }
     }
 
-    let cup = new ImageData(cupImageData, imageData.width, imageData.height)
-    let disk = new ImageData(diskImageData, imageData.width, imageData.height)
+
+    let cup = new ImageData(fuzzy(imageData.data).cluster1, imageData.width, imageData.height)
+
+    let disk = new ImageData(fuzzy(fuzzy(imageData.data).cluster2).cluster1, imageData.width, imageData.height)
+
     if (cardToShow === 'cup') {
         ctx.putImageData(cup, 0, 0);
     } else if (cardToShow === 'disk') {
