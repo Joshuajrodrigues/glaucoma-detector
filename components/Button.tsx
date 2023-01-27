@@ -6,8 +6,8 @@ const Button:FunctionComponent<{
 }> = ({children,onClick,...other}) => {
   return (
     <button onClick={onClick}
-      className=' border-black border text-sm rounded-sm m-2 p-1 
-                md:text-lg md:p-2 md:rounded-md'
+      className=' border-black border  m-2 
+                text-lg p-2 rounded-md'
     >{children}</button>
   )
 }

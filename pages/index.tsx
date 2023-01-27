@@ -30,7 +30,7 @@ export default function Home() {
 
         <ImageContainer
           imageRef={imgRef}
-          instructions="Drop Your Image Here OR"
+            instructions="Drop Your Image Here Or"
           multiple={false}
 
           />

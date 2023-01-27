@@ -137,7 +137,7 @@ const ImageContainer: FunctionComponent<{
           {Object.keys(files).length === 0 &&
             images.length <= 0 &&
             !loadSample && (
-              <>
+            <>
                 <p className="p-5 m-5 w-56 rounded">{instructions}</p>
                 <label>{label}</label>
                 <Button onClick={handleUploadBtnClick}>Upload File</Button>
@@ -151,7 +151,7 @@ const ImageContainer: FunctionComponent<{
                   onChange={handleNewFileUpload}
                   ref={fileInputRef}
                 />
-              </>
+            </>
             )}
 
           {/* Display image */}
