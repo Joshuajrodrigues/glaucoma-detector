@@ -9,7 +9,7 @@ export async function canvasPreprocess(
 ) {
 
     const ctx = canvas.getContext("2d");
-    const scale = 1
+    const scale = 1 
     const rotate = 0
     const crop = {
         x: 0,
@@ -104,10 +104,9 @@ export async function canvasPreprocess(
     // number of clusters = 3
     // number of strPts = 3-2 = 1
     let cStr = 0;
-    let cStr2 = 0;
     let cMin = arrayMin(pix);
     let cMax = arrayMax(pix);
-    let median = findMedian(greenpixelarr)
+    let median = findMedian(greenpixelarr) 
 
     if (Math.hypot(cMin - median) === Math.hypot(cMax - median)) {
         cStr = median;
@@ -117,39 +116,26 @@ export async function canvasPreprocess(
         cStr = median + Math.abs(median - cMin) / 2;
     }
 
-    if (Math.hypot(cMin - cStr) === Math.hypot(cMax - cStr)) {
-        cStr2 = cStr;
-    } else if (Math.hypot(cMin - cStr) < Math.hypot(cMax - cStr)) {
-        cStr2 = cStr + Math.abs(cMax - median) / 2;
-    } else if (Math.hypot(cMin - cStr) > Math.hypot(cMax - cStr)) {
-        cStr2 = cStr + Math.abs(cStr - cMin) / 2;
-    }
-
-    console.log({ cMax, cStr2, cMin, cStr, median })
+    console.log({ cMax, cMin, cStr, median })
     for (let i = 0; i < pix.length; i++) {
         let greenPixel = pix[i + 1];
         let cminx = (greenPixel - cMin) ** 2;
         let cmaxx = (greenPixel - cMax) ** 2;
         let cstrx = (greenPixel - cStr) ** 2;
-        let cstrx2 = (greenPixel - cStr2) ** 2;
-        let uc1 = 1 / (cminx / cminx + cminx / cmaxx + cminx / cstrx + cminx / cstrx2);
-        let uc2 = 1 / (cmaxx / cmaxx + cmaxx / cminx + cmaxx / cstrx + cmaxx / cstrx2);
-        let uc3 = 1 / (cstrx / cstrx + cstrx / cminx + cstrx / cmaxx + cstrx / cstrx2);
-        let uc4 = 1 / (cstrx2 / cstrx + cstrx2 / cminx + cstrx2 / cmaxx + cstrx2 / cstrx2);
-        if (isNaN(uc1) || isNaN(uc2) || isNaN(uc3) || isNaN(uc4)) {
-            continue
-        } else if (uc1 > uc3 && uc1 > uc2 && uc1 > uc4) {
-            continue
-        } else if (uc2 > uc1 && uc2 > uc3 && uc2 > uc4) {
-            continue
-        } else if (uc3 > uc1 && uc3 > uc2 && uc3 > uc4) {
-            diskImageData[i + 1] = greenPixel
-            diskImageData[i + 3] = 255;
+        let uc1 = 1 / (cminx / cminx + cminx / cmaxx + cminx / cstrx);
+        let uc2 = 1 / (cmaxx / cmaxx + cmaxx / cminx + cmaxx / cstrx);
+        let uc3 = 1 / (cstrx / cstrx + cstrx / cminx + cstrx / cmaxx);
 
-        }
-        else {
+        if (isNaN(uc1) || isNaN(uc2) || isNaN(uc3)) {
+            continue
+        } else if (uc1 > uc3 && uc1 > uc2) {
+            continue
+        } else if (uc2 > uc1 && uc2 > uc3) {
             cupImageData[i + 1] = greenPixel
             cupImageData[i + 3] = 255;
+        } else {
+            diskImageData[i + 1] = greenPixel
+            diskImageData[i + 3] = 255;
         }
     }
 
