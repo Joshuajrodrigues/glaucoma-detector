@@ -105,13 +105,15 @@ export async function canvasPreprocess(
     let cMin = arrayMin(pix);
     let cMax = arrayMax(pix); 
     let median = findMedian(greenpixelarr) 
+
     if (Math.hypot(cMin - median) === Math.hypot(cMax - median)) {
         cStr = median;
     } else if (Math.hypot(cMin - median) < Math.hypot(cMax - median)) {
-        cStr = median + Math.abs(cMax - median) / 2;
+        cStr = median + 2 * Math.abs(cMax - median) / 3;
     } else if (Math.hypot(cMin - median) > Math.hypot(cMax - median)) {
-        cStr = median + Math.abs(median - cMin) / 2;
+        cStr = median + 2 * Math.abs(median - cMin) / 3;
     }
+
     console.log({ cMax, cMin, cStr, median })
     for (let i = 0; i < pix.length; i++) {
         let greenPixel = pix[i + 1];
