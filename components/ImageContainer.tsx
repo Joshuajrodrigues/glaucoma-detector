@@ -176,7 +176,7 @@ const ImageContainer: FunctionComponent<{
                   >
                     <img
                       ref={imageRef}
-                      className={`w-full h-full `}
+                      className={`w-full h-full object-contain `}
                       src={URL.createObjectURL(file)}
                       alt={`file preview ${index}`}
                     />
