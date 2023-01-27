@@ -109,9 +109,9 @@ export async function canvasPreprocess(
     if (Math.hypot(cMin - median) === Math.hypot(cMax - median)) {
         cStr = median;
     } else if (Math.hypot(cMin - median) < Math.hypot(cMax - median)) {
-        cStr = median + 2 * Math.abs(cMax - median) / 3;
+        cStr = median + Math.abs(cMax - median) / 2;
     } else if (Math.hypot(cMin - median) > Math.hypot(cMax - median)) {
-        cStr = median + 2 * Math.abs(median - cMin) / 3;
+        cStr = median + Math.abs(median - cMin) / 2;
     }
 
     console.log({ cMax, cMin, cStr, median })
