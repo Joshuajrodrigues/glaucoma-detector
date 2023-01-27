@@ -16,6 +16,8 @@ import { canvasPreprocess } from "../utils/canvasPreprocessing";
 import useDisplayResult from "../store/useDisaplyResult";
 import useSample from "../store/useSample";
 import Marker from "./Marker";
+import fuzzy from "../utils/fuzzy";
+import useProcessedData from "../store/useProcessedData";
 const MAX_SIZE = 16270840;
 type Files = { [key: string]: File };
 
@@ -46,6 +48,11 @@ const ImageContainer: FunctionComponent<{
   const setSteps = useSteps((state) => state.setSteps);
   const steps = useSteps((state) => state.steps);
   const imageToShow = useDisplayResult((s) => s.imageToShow);
+  const setImageData = useProcessedData((s) => s.setImageData);
+  const cupImageData = useProcessedData((s) => s.cupImageData);
+  const diskImageData = useProcessedData((s) => s.diskImageData);
+  const imageData = useProcessedData((s) => s.imageData);
+
   const loadSample = useSample((s) => s.load);
   const handleUploadBtnClick = () => {
     fileInputRef.current?.click();
@@ -72,12 +79,42 @@ const ImageContainer: FunctionComponent<{
       let img = new Image();
       img.src = URL.createObjectURL(images[0]);
       img.onload = function () {
-        if (steps.includes(4) && preprocessCanvasRef?.current) {
-          canvasPreprocess(img, preprocessCanvasRef.current, imageToShow);
+        if (steps.includes(4) && preprocessCanvasRef.current) {
+          canvasPreprocess(img, preprocessCanvasRef.current).then(
+            (imageData) => {
+              let cup = new ImageData(
+                fuzzy(imageData.data).cluster1,
+                imageData.width,
+                imageData.height
+              );
+
+              let disk = new ImageData(
+                fuzzy(imageData.data).cluster2,
+                imageData.width,
+                imageData.height
+              );
+              setImageData("imageData", img);
+              setImageData("cupImageData", cup);
+              setImageData("diskImageData", disk);
+            }
+          );
         }
       };
     }
-  }, [steps, images, preprocessCanvasRef, imageToShow]);
+  }, [steps, images, preprocessCanvasRef]);
+
+  useEffect(() => {
+    if (imageToShow === "cup") {
+      let ctx = preprocessCanvasRef.current?.getContext("2d");
+      if (cupImageData) ctx?.putImageData(cupImageData, 0, 0);
+    } else if (imageToShow === "disk") {
+      let ctx = preprocessCanvasRef.current?.getContext("2d");
+      if (diskImageData) ctx?.putImageData(diskImageData, 0, 0);
+    } else if (imageToShow === "current") {
+      if (imageData && preprocessCanvasRef.current)
+        canvasPreprocess(imageData, preprocessCanvasRef?.current);
+    }
+  }, [imageToShow, imageData, diskImageData]);
 
   const addNewFiles = (newFiles: FileList) => {
     for (let file of newFiles) {
@@ -137,7 +174,7 @@ const ImageContainer: FunctionComponent<{
           {Object.keys(files).length === 0 &&
             images.length <= 0 &&
             !loadSample && (
-            <>
+              <>
                 <p className="p-5 m-5 w-56 rounded">{instructions}</p>
                 <label>{label}</label>
                 <Button onClick={handleUploadBtnClick}>Upload File</Button>
@@ -151,7 +188,7 @@ const ImageContainer: FunctionComponent<{
                   onChange={handleNewFileUpload}
                   ref={fileInputRef}
                 />
-            </>
+              </>
             )}
 
           {/* Display image */}
@@ -182,15 +219,21 @@ const ImageContainer: FunctionComponent<{
                     />
                   </ReactCrop>
                 ) : (
-                  <div  >
-                    <Marker limit={preprocessCanvasRef.current?.clientWidth}/>
-                    <Marker limit={preprocessCanvasRef.current?.clientWidth}/>
-                    <Marker direction="verticle" limit={preprocessCanvasRef.current?.clientHeight}/>
-                    <Marker direction="verticle" limit={preprocessCanvasRef.current?.clientHeight}/>
+                  <div>
+                    <Marker limit={preprocessCanvasRef.current?.clientWidth} />
+                    <Marker limit={preprocessCanvasRef.current?.clientWidth} />
+                    <Marker
+                      direction="verticle"
+                      limit={preprocessCanvasRef.current?.clientHeight}
+                    />
+                    <Marker
+                      direction="verticle"
+                      limit={preprocessCanvasRef.current?.clientHeight}
+                    />
                     <canvas
                       ref={preprocessCanvasRef}
                       style={{
-                        position:"absolute",
+                        position: "absolute",
                         border: "1px solid black",
                         objectFit: "contain",
                         width: "100%",
