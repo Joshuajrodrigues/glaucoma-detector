@@ -64,7 +64,7 @@ const CardContainer: FunctionComponent<{
   return (
     <div className="relative md:w-1/2 w-full h-full p-5 ">
       <Card isVisible={!steps.includes(3)} index={3}>
-        <pre>{JSON.stringify(cupCal, null, 2)}</pre>
+        {/* <pre>{JSON.stringify(cupCal, null, 2)}</pre> */}
         <div className="flex">
           <Button onClick={() => setImageToShow("cup")}>Show Cup</Button>
           <Button onClick={() => setImageToShow("disk")}>Show Disk</Button>
