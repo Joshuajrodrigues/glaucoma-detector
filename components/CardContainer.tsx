@@ -1,4 +1,10 @@
-import { FunctionComponent, RefObject, useEffect, useRef } from "react";
+import {
+  FunctionComponent,
+  RefObject,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import useCropComplete from "../store/useCropComplete";
 import useSample from "../store/useSample";
 import { canvasPreview } from "../utils/canvasPreview";
@@ -16,8 +22,9 @@ const CardContainer: FunctionComponent<{
   const cropImageProperties = useCropComplete(
     (state) => state.cropImageProperties
   );
-  const steps = useSteps((state) => state.steps);
+
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
+
   useEffect(() => {
     if (
       cropImageProperties?.width &&
@@ -46,13 +53,13 @@ const CardContainer: FunctionComponent<{
 
   return (
     <div className="relative md:w-1/2 w-full h-full p-5 ">
-      <Card isVisible={!steps.includes(3)} index={3}>
+      <Card index={3}>
         <ResultsScreen />
       </Card>
-      <Card isVisible={!steps.includes(4)} title="Crop Roi" index={4}>
+      <Card title="Crop Roi" index={4}>
         <CropScreen previewCanvasRef={previewCanvasRef} />
       </Card>
-      <Card isVisible={!steps.includes(5)} title="Select Image" index={5}>
+      <Card title="Select Image" index={5}>
         <SelectScreen />
       </Card>
     </div>

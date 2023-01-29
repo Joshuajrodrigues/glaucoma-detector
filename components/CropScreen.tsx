@@ -5,13 +5,17 @@ import useSteps from "../store/useSteps";
 import useFundas from "../store/useFundas";
 
 const CropScreen: FC<{
-  previewCanvasRef:  RefObject<HTMLCanvasElement>;
+  previewCanvasRef: RefObject<HTMLCanvasElement>;
 }> = ({ previewCanvasRef }) => {
-  const { cropImageProperties, setCroppedImage, croppedImage } =
-    useCropComplete((state) => state);
-  const { setSteps, steps } = useSteps((state) => state);
-  const { setImage } = useFundas((state) => state);
+  const croppedImage = useCropComplete((state) => state.croppedImage);
+  const cropImageProperties = useCropComplete(
+    (state) => state.cropImageProperties
+  );
+  const setSteps = useSteps((state) => state.setSteps);
+  const steps = useSteps((s) => s.steps);
+  const setImage = useFundas((state) => state.setImage);
   const setIsCropping = useCropComplete((state) => state.setIsCropping);
+
   const handleCrop = () => {
     let newSteps = steps;
     newSteps.push(4);
