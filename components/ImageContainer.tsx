@@ -1,24 +1,22 @@
 import React, {
   FunctionComponent,
-  LegacyRef,
   RefObject,
   useEffect,
   useRef,
   useState,
 } from "react";
-import Button from "./Button";
-import useFundas from "../store/useFundas";
 import "react-image-crop/dist/ReactCrop.css";
-import ReactCrop, { Crop, PixelCrop } from "react-image-crop";
 import useCropComplete from "../store/useCropComplete";
+import useDisplayResult from "../store/useDisaplyResult";
+import useFundas from "../store/useFundas";
+import useProcessedData from "../store/useProcessedData";
+import useSample from "../store/useSample";
 import useSteps from "../store/useSteps";
 import { canvasPreprocess } from "../utils/canvasPreprocessing";
-import useDisplayResult from "../store/useDisaplyResult";
-import useSample from "../store/useSample";
-import Marker from "./Marker";
 import fuzzy from "../utils/fuzzy";
-import useProcessedData from "../store/useProcessedData";
-import useCdrCalculations from "../store/useCdrCalculation";
+import Button from "./Button";
+import Cropper from "./Cropper";
+import ProcessingCanvas from "./ProcessingCanvas";
 const MAX_SIZE = 16270840;
 type Files = { [key: string]: File };
 
@@ -42,9 +40,6 @@ const ImageContainer: FunctionComponent<{
   const [files, setFiles] = useState<Files>({});
   const images = useFundas((state) => state.image);
   const setImages = useFundas((state) => state.setImage);
-  const [crop, setCrop] = useState<Crop>();
-  const setCropInfo = useCropComplete((state) => state.setCropImageProperties);
-  const isCropping = useCropComplete((state) => state.isCropping);
   const setIsCropping = useCropComplete((state) => state.setIsCropping);
   const setSteps = useSteps((state) => state.setSteps);
   const steps = useSteps((state) => state.steps);
@@ -53,8 +48,6 @@ const ImageContainer: FunctionComponent<{
   const cupImageData = useProcessedData((s) => s.cupImageData);
   const diskImageData = useProcessedData((s) => s.diskImageData);
   const imageData = useProcessedData((s) => s.imageData);
-  const setCup = useCdrCalculations((s) => s.setCup);
-  const setDisk = useCdrCalculations((s) => s.setDisk);
   const loadSample = useSample((s) => s.load);
   const handleUploadBtnClick = () => {
     fileInputRef.current?.click();
@@ -63,18 +56,6 @@ const ImageContainer: FunctionComponent<{
   const convertNestedObjectToArray = (nestedObj: Files): File[] => {
     return Object.keys(nestedObj).map((key) => nestedObj[key]);
   };
-
-  useEffect(() => {
-    if (!isCropping) {
-      setCrop({
-        x: 0,
-        y: 0,
-        width: 0,
-        height: 0,
-        unit: "px",
-      });
-    }
-  }, [isCropping]);
 
   useEffect(() => {
     if (images[0]) {
@@ -169,9 +150,19 @@ const ImageContainer: FunctionComponent<{
   return (
     <section className="md:w-1/2">
       <div
-        className={
-          "flex bg-white justify-center items-center h-96 md:w-96 lg:w-5/6 md:h-96 md:ml-7 p-5 m-9 border-black rounded outline-dashed "
-        }
+        className={`flex 
+        bg-white 
+        justify-center 
+        items-center 
+        h-96 md:w-96 
+        lg:w-5/6 
+        md:h-96 
+        md:ml-7 
+        p-5 m-9
+         border-black 
+         rounded 
+         outline-dashed
+       `}
       >
         <div className=" w-full h-full relative flex flex-col items-center ">
           {/* Upload image */}
@@ -206,74 +197,15 @@ const ImageContainer: FunctionComponent<{
                 key={fileName}
               >
                 {isImageFile && !steps.includes(4) ? (
-                  <ReactCrop
-                    circularCrop
-                    crop={crop}
-                    disabled={!isCropping}
-                    style={{ width: "100%", height: "100%" }}
-                    onChange={(c) => setCrop(c)}
-                    onComplete={(c) => setCropInfo(c)}
-                    //className="w-full h-full object-cover"
-                  >
-                    <img
-                      ref={imageRef}
-                      className={`w-full h-full  `}
-                      src={URL.createObjectURL(file)}
-                      alt={`file preview ${index}`}
-                    />
-                  </ReactCrop>
+                  <>
+                    <Cropper file={file} imageRef={imageRef} />
+                  </>
                 ) : (
-                  <div>
-                    {imageToShow !== "current" && (
-                      <>
-                        <Marker
-                          limit={preprocessCanvasRef.current?.clientWidth}
-                          markerPostion={(pos) => {
-                            imageToShow === "cup"
-                              ? setCup({ x1: pos })
-                              : setDisk({ x1: pos });
-                          }}
-                        />
-                        <Marker
-                          limit={preprocessCanvasRef.current?.clientWidth}
-                          markerPostion={(pos) => {
-                            imageToShow === "cup"
-                              ? setCup({ x2: pos })
-                              : setDisk({ x2: pos });
-                          }}
-                        />
-                        <Marker
-                          direction="verticle"
-                          limit={preprocessCanvasRef.current?.clientHeight}
-                          markerPostion={(pos) => {
-                            imageToShow === "cup"
-                              ? setCup({ y1: pos })
-                              : setDisk({ y1: pos });
-                          }}
-                        />
-                        <Marker
-                          direction="verticle"
-                          limit={preprocessCanvasRef.current?.clientHeight}
-                          markerPostion={(pos) => {
-                            imageToShow === "cup"
-                              ? setCup({ y2: pos })
-                              : setDisk({ y2: pos });
-                          }}
-                        />
-                      </>
-                    )}
-                    <canvas
-                      ref={preprocessCanvasRef}
-                      style={{
-                        position: "absolute",
-                        border: "1px solid black",
-                        objectFit: "contain",
-                        width: "100%",
-                        height: "100%",
-                        //orderRadius: "50%"
-                      }}
-                    ></canvas>
-                  </div>
+                  <>
+                    <ProcessingCanvas
+                      preprocessCanvasRef={preprocessCanvasRef}
+                    />
+                  </>
                 )}
               </section>
             );
