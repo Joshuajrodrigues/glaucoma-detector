@@ -6,8 +6,7 @@ import ImageContainer from "../components/ImageContainer";
 import { LegacyRef, useEffect, useRef, useState } from "react";
 import Card from "../components/Card";
 import CardContainer from "../components/CardContainer";
-import { add } from "../public/wasm_bg.wasm";
-
+import { add } from "../wasm/pkg/wasm_bg.wasm";
 export default function Home() {
 
   const imgRef = useRef<HTMLImageElement>(null);

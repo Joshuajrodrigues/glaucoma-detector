@@ -15,6 +15,7 @@ specifiers:
   react-image-crop: ^10.0.9
   tailwindcss: ^3.2.4
   typescript: 4.9.4
+  wasm: file:wasm/pkg
   wasm-pack: ^0.10.3
   zustand: ^4.3.2
 
@@ -30,6 +31,7 @@ dependencies:
   react-dom: 18.2.0_react@18.2.0
   react-image-crop: 10.0.9_react@18.2.0
   typescript: 4.9.4
+  wasm: file:wasm/pkg
   zustand: 4.3.2_react@18.2.0
 
 devDependencies:
@@ -2423,4 +2425,10 @@ packages:
     dependencies:
       react: 18.2.0
       use-sync-external-store: 1.2.0_react@18.2.0
+    dev: false
+
+  file:wasm/pkg:
+    resolution: {directory: wasm/pkg, type: directory}
+    name: wasm
+    version: 0.1.0
     dev: false

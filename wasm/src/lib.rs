@@ -1,4 +1,6 @@
-#[no_mangle]
-pub extern "C" fn add(a: i32, b: i32) -> i32 {
-    a + b
+use wasm_bindgen::prelude::*;
+
+#[wasm_bindgen]
+pub fn add(x: i32, y: i32) -> i32 {
+    x + y
 }
