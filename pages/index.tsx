@@ -6,19 +6,11 @@ import ImageContainer from "../components/ImageContainer";
 import { LegacyRef, useEffect, useRef, useState } from "react";
 import Card from "../components/Card";
 import CardContainer from "../components/CardContainer";
-import {add} from "wasm"
-import { useMountEffectOnce } from "../hooks/useMountEffectOnce";
+
+
 export default function Home() {
 
   const imgRef = useRef<HTMLImageElement>(null);
-  const [sum, setSum] = useState(0)
-  useMountEffectOnce(() => {
-    (async() => {
-      const wasm = await import("wasm");
-      await wasm.default();
-      setSum(add(40, 2));
-    })()
-  })
 
 
 
@@ -36,11 +28,6 @@ export default function Home() {
       <main >
         <h1 className="text-3xl font-bold m-5">Glaucoma Detector</h1>
         <div className="md:flex md:h-full">
-        <div>
-          {
-            sum> 0 ? `Wasm loaded ${sum}`:'loading wasm'
-          }
-        </div>
         <ImageContainer
           imageRef={imgRef}
             instructions="Drop Your Image Here Or"
