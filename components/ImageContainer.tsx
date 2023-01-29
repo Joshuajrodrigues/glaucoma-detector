@@ -224,32 +224,44 @@ const ImageContainer: FunctionComponent<{
                   </ReactCrop>
                 ) : (
                   <div>
-                    <Marker
-                      limit={preprocessCanvasRef.current?.clientWidth}
-                      markerPostion={(pos) => {
-                        imageToShow === "cup"?setCup({x1:pos}):setDisk({x1:pos})
-                      }}
-                    />
-                    <Marker
-                      limit={preprocessCanvasRef.current?.clientWidth}
-                      markerPostion={(pos) => {
-                           imageToShow === "cup"?setCup({x2:pos}):setDisk({x2:pos})
-                      }}
-                    />
-                    <Marker
-                      direction="verticle"
-                      limit={preprocessCanvasRef.current?.clientHeight}
-                      markerPostion={(pos) => {
-                          imageToShow === "cup"?setCup({y1:pos}):setDisk({y1:pos})
-                      }}
-                    />
-                    <Marker
-                      direction="verticle"
-                      limit={preprocessCanvasRef.current?.clientHeight}
-                      markerPostion={(pos) => {
-                            imageToShow === "cup"?setCup({y2:pos}):setDisk({y2:pos})
-                      }}
-                    />
+                    {imageToShow !== "current" && (
+                      <>
+                        <Marker
+                          limit={preprocessCanvasRef.current?.clientWidth}
+                          markerPostion={(pos) => {
+                            imageToShow === "cup"
+                              ? setCup({ x1: pos })
+                              : setDisk({ x1: pos });
+                          }}
+                        />
+                        <Marker
+                          limit={preprocessCanvasRef.current?.clientWidth}
+                          markerPostion={(pos) => {
+                            imageToShow === "cup"
+                              ? setCup({ x2: pos })
+                              : setDisk({ x2: pos });
+                          }}
+                        />
+                        <Marker
+                          direction="verticle"
+                          limit={preprocessCanvasRef.current?.clientHeight}
+                          markerPostion={(pos) => {
+                            imageToShow === "cup"
+                              ? setCup({ y1: pos })
+                              : setDisk({ y1: pos });
+                          }}
+                        />
+                        <Marker
+                          direction="verticle"
+                          limit={preprocessCanvasRef.current?.clientHeight}
+                          markerPostion={(pos) => {
+                            imageToShow === "cup"
+                              ? setCup({ y2: pos })
+                              : setDisk({ y2: pos });
+                          }}
+                        />
+                      </>
+                    )}
                     <canvas
                       ref={preprocessCanvasRef}
                       style={{
