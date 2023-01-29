@@ -1,6 +1,6 @@
 import {create} from "zustand";
 
-interface ICodinates{
+export interface ICodinates{
     x1?:number,
     y1?:number,
     x2?:number,

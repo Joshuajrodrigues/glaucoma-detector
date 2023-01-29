@@ -8,6 +8,7 @@ import { canvasPreview } from "../utils/canvasPreview";
 import Button from "./Button";
 import Card from "./Card";
 import useCdrCalculations from "../store/useCdrCalculation";
+import ResultsScreen from "./ResultsScreen";
 
 const CardContainer: FunctionComponent<{
   imageRef: RefObject<HTMLImageElement>;
@@ -64,37 +65,7 @@ const CardContainer: FunctionComponent<{
   return (
     <div className="relative md:w-1/2 w-full h-full p-5 ">
       <Card isVisible={!steps.includes(3)} index={3}>
-        {/* <pre>{JSON.stringify(cupCal, null, 2)}</pre> */}
-        <div className="flex">
-          <Button onClick={() => setImageToShow("cup")}>Show Cup</Button>
-          <Button onClick={() => setImageToShow("disk")}>Show Disk</Button>
-          <Button onClick={() => setImageToShow("current")}>
-            Show Original
-          </Button>
-        </div>
-        <div className=" flex flex-col font-bold mt-14">
-          <div>
-            Cup Area :{" "}
-            {Math.PI *
-              ((cupCal.x1 || 0) - (cupCal.x2 || 0)) *
-              ((cupCal.y1 || 0) - (cupCal.y2 || 0))}
-          </div>
-          <div>
-            Disk Area :
-            {Math.PI *
-              ((diskCal.x1 || 0) - (diskCal.x2 || 0)) *
-              ((diskCal.y1 || 0) - (diskCal.y2 || 0))}
-          </div>
-          <div>
-            Estimated Cup To Disk Ratio (CDR) :
-            {(Math.PI *
-              ((cupCal.x1 || 0) - (cupCal.x2 || 0)) *
-              ((cupCal.y1 || 0) - (cupCal.y2 || 0))) /
-              (Math.PI *
-                ((diskCal.x1 || 0) - (diskCal.x2 || 0)) *
-                ((diskCal.y1 || 0) - (diskCal.y2 || 0)))}
-          </div>
-        </div>
+       <ResultsScreen/>
       </Card>
       <Card isVisible={!steps.includes(4)} title="Crop Roi" index={4}>
         <p>Place region of interest in the square.</p>
