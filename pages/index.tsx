@@ -6,14 +6,20 @@ import ImageContainer from "../components/ImageContainer";
 import { LegacyRef, useEffect, useRef, useState } from "react";
 import Card from "../components/Card";
 import CardContainer from "../components/CardContainer";
-import { add } from "../wasm/pkg/wasm_bg.wasm";
+import {add} from "wasm"
+import { useMountEffectOnce } from "../hooks/useMountEffectOnce";
 export default function Home() {
 
   const imgRef = useRef<HTMLImageElement>(null);
   const [sum, setSum] = useState(0)
-  useEffect(() => {
-    setSum(add(40, 2));
-  }, []);
+  useMountEffectOnce(() => {
+    (async() => {
+      const wasm = await import("wasm");
+      await wasm.default();
+      setSum(add(40, 2));
+    })()
+  })
+
 
 
   return (
