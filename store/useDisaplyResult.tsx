@@ -7,9 +7,9 @@ interface FundasState {
 }
 
 const useDisplayResult = create<FundasState>()((set) => ({
-    imageToShow: "cup",
+    imageToShow: "current",
     setImage: (newImageToShow) => set(() => ({ imageToShow: newImageToShow })),
-    remove: () => set(() => ({ imageToShow: "cup" })),
+    remove: () => set(() => ({ imageToShow: "current" })),
 }));
 
 export default useDisplayResult;
