@@ -42,9 +42,9 @@ const ResultsScreen = () => {
   return (
     <>
       <div className="flex">
+        <Button onClick={() => setImageToShow("current")}>Original</Button>
         <Button onClick={() => setImageToShow("cup")}>Show Cup</Button>
         <Button onClick={() => setImageToShow("disk")}>Show Disk</Button>
-        <Button onClick={() => setImageToShow("current")}>Show Original</Button>
       </div>
       <div className=" flex flex-col font-bold mt-14">
         <div>
