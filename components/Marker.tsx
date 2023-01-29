@@ -6,14 +6,14 @@ const Marker: FC<{
   limit?: number;
   startPos?: number;
   direction?: Direction;
-
+  markerPostion:(pos:number)=>void
 }> = ({
   limit,
   startPos = 0,
   direction = "horizontal",
-
+  markerPostion
 }) => {
-  const [square, setSquare] = useState(startPos);
+  const [square, setSquare] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [start, setStart] = useState(0);
 
@@ -23,6 +23,9 @@ const Marker: FC<{
   const handleTouchEnd = () => {
     setIsDragging(false);
   }
+  useEffect(()=>{
+    markerPostion(square)
+  },[square])
 
   useEffect(() => {
     document.addEventListener("mouseup", handleMouseUp);
@@ -115,7 +118,7 @@ const Marker: FC<{
           direction === "horizontal" ? "w-8 h-6 bg-blue-500" : "w-6 h-8 bg-red-500"
         }  absolute text-white  text-center `}
       >
-      
+   
       </span>
     </div>
   );

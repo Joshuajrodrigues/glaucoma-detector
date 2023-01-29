@@ -18,6 +18,7 @@ import useSample from "../store/useSample";
 import Marker from "./Marker";
 import fuzzy from "../utils/fuzzy";
 import useProcessedData from "../store/useProcessedData";
+import useCdrCalculations from "../store/useCdrCalculation";
 const MAX_SIZE = 16270840;
 type Files = { [key: string]: File };
 
@@ -52,7 +53,8 @@ const ImageContainer: FunctionComponent<{
   const cupImageData = useProcessedData((s) => s.cupImageData);
   const diskImageData = useProcessedData((s) => s.diskImageData);
   const imageData = useProcessedData((s) => s.imageData);
-
+  const setCup = useCdrCalculations((s) => s.setCup);
+  const setDisk = useCdrCalculations((s) => s.setDisk);
   const loadSample = useSample((s) => s.load);
   const handleUploadBtnClick = () => {
     fileInputRef.current?.click();
@@ -106,7 +108,9 @@ const ImageContainer: FunctionComponent<{
   useEffect(() => {
     if (imageToShow === "cup") {
       let ctx = preprocessCanvasRef.current?.getContext("2d");
-      if (cupImageData) ctx?.putImageData(cupImageData, 0, 0);
+      if (cupImageData) {
+        ctx?.putImageData(cupImageData, 0, 0);
+      }
     } else if (imageToShow === "disk") {
       let ctx = preprocessCanvasRef.current?.getContext("2d");
       if (diskImageData) ctx?.putImageData(diskImageData, 0, 0);
@@ -220,15 +224,31 @@ const ImageContainer: FunctionComponent<{
                   </ReactCrop>
                 ) : (
                   <div>
-                    <Marker limit={preprocessCanvasRef.current?.clientWidth} />
-                    <Marker limit={preprocessCanvasRef.current?.clientWidth} />
                     <Marker
-                      direction="verticle"
-                      limit={preprocessCanvasRef.current?.clientHeight}
+                      limit={preprocessCanvasRef.current?.clientWidth}
+                      markerPostion={(pos) => {
+                        imageToShow === "cup"?setCup({x1:pos}):setDisk({x1:pos})
+                      }}
+                    />
+                    <Marker
+                      limit={preprocessCanvasRef.current?.clientWidth}
+                      markerPostion={(pos) => {
+                           imageToShow === "cup"?setCup({x2:pos}):setDisk({x2:pos})
+                      }}
                     />
                     <Marker
                       direction="verticle"
                       limit={preprocessCanvasRef.current?.clientHeight}
+                      markerPostion={(pos) => {
+                          imageToShow === "cup"?setCup({y1:pos}):setDisk({y1:pos})
+                      }}
+                    />
+                    <Marker
+                      direction="verticle"
+                      limit={preprocessCanvasRef.current?.clientHeight}
+                      markerPostion={(pos) => {
+                            imageToShow === "cup"?setCup({y2:pos}):setDisk({y2:pos})
+                      }}
                     />
                     <canvas
                       ref={preprocessCanvasRef}
