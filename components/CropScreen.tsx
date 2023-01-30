@@ -7,21 +7,17 @@ import useFundas from "../store/useFundas";
 const CropScreen: FC<{
   previewCanvasRef: RefObject<HTMLCanvasElement>;
 }> = ({ previewCanvasRef }) => {
-  const croppedImage = useCropComplete((state) => state.croppedImage);
-  const cropImageProperties = useCropComplete(
-    (state) => state.cropImageProperties
-  );
-  const setSteps = useSteps((state) => state.setSteps);
-  const steps = useSteps((s) => s.steps);
-  const setImage = useFundas((state) => state.setImage);
-  const setIsCropping = useCropComplete((state) => state.setIsCropping);
+
+  const cropCompleteState = useCropComplete((state) => state);
+  const stepState = useSteps(s => s)
+  const fundasState = useFundas((state) => state);
 
   const handleCrop = () => {
-    let newSteps = steps;
+    let newSteps = stepState.steps;
     newSteps.push(4);
-    setSteps(newSteps);
-    setImage(croppedImage);
-    setIsCropping(false);
+    stepState.setSteps(newSteps);
+    fundasState.setImage(cropCompleteState.croppedImage);
+    cropCompleteState.setIsCropping(false);
   };
   return (
     <>
@@ -37,7 +33,7 @@ const CropScreen: FC<{
           //orderRadius: "50%"
         }}
       />
-      {cropImageProperties.width > 0 && (
+      {cropCompleteState.cropImageProperties.width > 0 && (
         <Button
           onClick={() => {
             handleCrop();

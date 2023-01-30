@@ -59,6 +59,7 @@ const ImageContainer: FunctionComponent<{
 
   useEffect(() => {
     if (images[0]) {
+      console.log("i run")
       let img = new Image();
       img.src = URL.createObjectURL(images[0]);
       img.onload = function () {

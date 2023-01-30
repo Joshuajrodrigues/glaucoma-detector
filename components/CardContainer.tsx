@@ -18,17 +18,15 @@ import SelectScreen from "./SelectScreen";
 const CardContainer: FunctionComponent<{
   imageRef: RefObject<HTMLImageElement>;
 }> = ({ imageRef }) => {
-  const setCroppedImage = useCropComplete((state) => state.setCroppedImage);
-  const cropImageProperties = useCropComplete(
-    (state) => state.cropImageProperties
-  );
+
+  const cropCompleteState = useCropComplete((state) => state);
 
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     if (
-      cropImageProperties?.width &&
-      cropImageProperties?.height &&
+      cropCompleteState.cropImageProperties?.width &&
+      cropCompleteState.cropImageProperties?.height &&
       previewCanvasRef.current &&
       imageRef &&
       imageRef.current
@@ -36,20 +34,20 @@ const CardContainer: FunctionComponent<{
       canvasPreview(
         imageRef.current,
         previewCanvasRef.current,
-        cropImageProperties
+        cropCompleteState.cropImageProperties
       ).then((resp) => {
         let fileObject: File;
         resp.toBlob((blob) => {
           if (blob) {
             fileObject = new File([blob], "blsa", { type: "image/jpg" });
             console.log("fileObject", fileObject);
-            setCroppedImage([fileObject]);
+            cropCompleteState.setCroppedImage([fileObject]);
             //  setImage([fileObject])
           }
         });
       });
     }
-  }, [cropImageProperties]);
+  }, [cropCompleteState.cropImageProperties]);
 
   return (
     <div className="relative md:w-1/2 w-full h-full p-5 ">
