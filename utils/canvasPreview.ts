@@ -52,7 +52,7 @@ export async function canvasPreview(
   //console.log(image, cropX, cropY);
   // ctx.filter='contrast(1.8)'
 
-  //console.log("imageData",imageData)
+  //console.log("imageData", centerX)
   ctx.drawImage(
     image,
     0,

@@ -1,4 +1,4 @@
-import React, { FC, RefObject } from "react";
+import React, { FC, RefObject, useEffect } from "react";
 import Button from "./Button";
 import useCropComplete from "../store/useCropComplete";
 import useSteps from "../store/useSteps";
@@ -19,6 +19,10 @@ const CropScreen: FC<{
     fundasState.setImage(cropCompleteState.croppedImage);
     cropCompleteState.setIsCropping(false);
   };
+  useEffect(() => {
+    console.log("cropCompleteState", cropCompleteState);
+
+  }, [cropCompleteState])
   return (
     <>
       <p>Place region of interest in the square.</p>

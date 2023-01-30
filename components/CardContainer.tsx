@@ -2,17 +2,13 @@ import {
   FunctionComponent,
   RefObject,
   useEffect,
-  useRef,
-  useState,
+  useRef
 } from "react";
 import useCropComplete from "../store/useCropComplete";
-import useSample from "../store/useSample";
 import { canvasPreview } from "../utils/canvasPreview";
-import Button from "./Button";
 import Card from "./Card";
 import CropScreen from "./CropScreen";
 import ResultsScreen from "./ResultsScreen";
-import useSteps from "../store/useSteps";
 import SelectScreen from "./SelectScreen";
 
 const CardContainer: FunctionComponent<{
@@ -47,7 +43,7 @@ const CardContainer: FunctionComponent<{
         });
       });
     }
-  }, [cropCompleteState.cropImageProperties]);
+  }, [cropCompleteState.cropImageProperties, imageRef.current, previewCanvasRef.current]);
 
   return (
     <div className="relative md:w-1/2 w-full h-full p-5 ">
