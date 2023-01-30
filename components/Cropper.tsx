@@ -1,23 +1,24 @@
-import React, { FC, useState } from "react";
+import React, { FC, RefObject, useState } from "react";
 import ReactCrop, { Crop } from "react-image-crop";
 
 import useCropComplete from "../store/useCropComplete";
 
 const Cropper:FC<{
-    imageRef:any,
-    file:any
+  imageRef?: RefObject<HTMLImageElement>,
+  file: File
 }> = ({imageRef,file}) => {
-    const cropCompleteState = useCropComplete((state) => state);
+  const cropCompleteState = useCropComplete((state) => state.setCropImageProperties);
+  const isCropping = useCropComplete((state) => state.isCropping);
     const [crop, setCrop] = useState<Crop>();
   return (
     <>
       <ReactCrop
         circularCrop
         crop={crop}
-        disabled={!cropCompleteState.isCropping}
+        disabled={!isCropping}
         style={{ width: "100%", height: "100%" }}
         onChange={(c) => setCrop(c)}
-        onComplete={(c) =>cropCompleteState.setCropImageProperties(c) }
+        onComplete={(c) => cropCompleteState(c)}
         //className="w-full h-full object-cover"
       >
         <img

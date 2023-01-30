@@ -72,20 +72,20 @@ const ImageContainer: FunctionComponent<{
                 imageData.height
               );
 
-              let disk = new ImageData(
-                fuzzy(imageData.data).cluster2,
-                imageData.width,
-                imageData.height
-              );
-              setImageData("imageData", img);
-              setImageData("cupImageData", cup);
-              setImageData("diskImageData", disk);
-            }
-          );
-        }
-      };
-    }
-  }, [steps, images, preprocessCanvasRef]);
+                let disk = new ImageData(
+                  fuzzy(imageData.data).cluster2,
+                  imageData.width,
+                  imageData.height
+                );
+                setImageData("imageData", img);
+                setImageData("cupImageData", cup);
+                setImageData("diskImageData", disk);
+              }
+            );
+          }
+        };
+      }
+    }, [steps, images, preprocessCanvasRef]);
 
   useEffect(() => {
     if (imageToShow === "cup") {
@@ -109,11 +109,11 @@ const ImageContainer: FunctionComponent<{
           return { [file.name]: file };
         }
 
-        files[file.name] = file;
+          files[file.name] = file;
+        }
       }
-    }
-    return { ...files };
-  };
+      return { ...files };
+    };
 
   const callUpdateFilesCb = (filesObj: Files) => {
     let filesArr = convertNestedObjectToArray(filesObj);
@@ -125,13 +125,13 @@ const ImageContainer: FunctionComponent<{
   const handleNewFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files: newFiles } = e.target;
 
-    if (newFiles?.length) {
-      let updatedFiles = addNewFiles(newFiles);
-      console.log("updatedFiles", updatedFiles);
-      setFiles(updatedFiles);
-      callUpdateFilesCb(updatedFiles);
-    }
-  };
+      if (newFiles?.length) {
+        let updatedFiles = addNewFiles(newFiles);
+        console.log("updatedFiles", updatedFiles);
+        setFiles(updatedFiles);
+        callUpdateFilesCb(updatedFiles);
+      }
+    };
 
   useEffect(() => {
     if (loadSample) {
@@ -164,57 +164,57 @@ const ImageContainer: FunctionComponent<{
          rounded 
          outline-dashed
        `}
-      >
-        <div className=" w-full h-full relative flex flex-col items-center ">
-          {/* Upload image */}
-          {Object.keys(files).length === 0 &&
-            images.length <= 0 &&
-            !loadSample && (
-              <>
-                <p className="p-5 m-5 w-56 rounded">{instructions}</p>
-                <label>{label}</label>
-                <Button onClick={handleUploadBtnClick}>Upload File</Button>
-                <input
-                  className="w-full h-full border-none absolute top-0 bottom-0 left-0 right-0 opacity-0 "
-                  type={"file"}
-                  draggable
-                  multiple={multiple}
-                  title={""}
-                  value={""}
-                  onChange={handleNewFileUpload}
-                  ref={fileInputRef}
-                />
-              </>
-            )}
+        >
+          <div className=" w-full h-full relative flex flex-col items-center ">
+            {/* Upload image */}
+            {Object.keys(files).length === 0 &&
+              images.length <= 0 &&
+              !loadSample && (
+                <>
+                  <p className="p-5 m-5 w-56 rounded">{instructions}</p>
+                  <label>{label}</label>
+                  <Button onClick={handleUploadBtnClick}>Upload File</Button>
+                  <input
+                    className="w-full h-full border-none absolute top-0 bottom-0 left-0 right-0 opacity-0 "
+                    type={"file"}
+                    draggable
+                    multiple={multiple}
+                    title={""}
+                    value={""}
+                    onChange={handleNewFileUpload}
+                    ref={fileInputRef}
+                  />
+                </>
+              )}
 
-          {/* Display image */}
-          {Object.keys(images).map((fileName, index) => {
-            let file = images[index];
-            let isImageFile = file.type.split("/")[0] === "image";
+            {/* Display image */}
+            {Object.keys(images).map((fileName, index) => {
+              let file = images[index];
+              let isImageFile = file.type.split("/")[0] === "image";
 
-            return (
-              <section
-                className="w-full h-full border-none absolute top-0 bottom-0 left-0 right-0 "
-                key={fileName}
-              >
-                {isImageFile && !steps.includes(4) ? (
-                  <>
-                    <Cropper file={file} imageRef={imageRef} />
-                  </>
-                ) : (
-                  <>
-                    <ProcessingCanvas
-                      preprocessCanvasRef={preprocessCanvasRef}
-                    />
-                  </>
-                )}
-              </section>
-            );
-          })}
+              return (
+                <section
+                  className="w-full h-full border-none absolute top-0 bottom-0 left-0 right-0 "
+                  key={fileName}
+                >
+                  {isImageFile && !steps.includes(4) ? (
+                    <>
+                      <Cropper file={file} imageRef={imageRef} />
+                    </>
+                  ) : (
+                    <>
+                      <ProcessingCanvas
+                        preprocessCanvasRef={preprocessCanvasRef}
+                      />
+                    </>
+                  )}
+                </section>
+              );
+            })}
+          </div>
         </div>
-      </div>
-    </section>
-  );
-};
+      </section>
+    );
+  };
 
 export default ImageContainer;
