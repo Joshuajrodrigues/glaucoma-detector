@@ -118,7 +118,7 @@ const Marker: FC<{
           direction === "horizontal" ? "w-8 h-6 bg-blue-500" : "w-6 h-8 bg-red-500"
         }  absolute text-white  text-center `}
       >
-   
+        {square}
       </span>
     </div>
   );

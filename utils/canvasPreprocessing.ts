@@ -56,12 +56,17 @@ export async function canvasPreprocess(
 
     let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
+    console.log("preprocess", canvas.width);
+
+
+
+
     ctx.restore();
     return imageData
 
 
 
-   
+
 }
 
 

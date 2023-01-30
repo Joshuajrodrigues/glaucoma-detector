@@ -53,6 +53,7 @@ const ProcessingCanvas:FC<{
         )}
         <canvas
           ref={preprocessCanvasRef}
+          id="preprocess-canvas"
           style={{
             position: "absolute",
             border: "1px solid black",
@@ -62,6 +63,7 @@ const ProcessingCanvas:FC<{
             //orderRadius: "50%"
           }}
         ></canvas>
+
       </div>
     </>
   );
