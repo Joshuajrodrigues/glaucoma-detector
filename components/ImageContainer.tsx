@@ -93,6 +93,7 @@ const ImageContainer: FunctionComponent<{
       let ctx = preprocessCanvasRef.current?.getContext("2d");
       if (cupImageData) {
         getImageCodinates(preprocessCanvasRef.current, cupImageData.data)
+
         ctx?.putImageData(cupImageData, 0, 0);
       }
     } else if (imageToShow === "disk") {
