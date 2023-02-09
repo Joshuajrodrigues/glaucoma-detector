@@ -167,7 +167,7 @@ const ImageContainer: FunctionComponent<{
         >
           <div className=" w-full h-full relative flex flex-col items-center ">
             {/* Upload image */}
-            {Object.keys(files).length === 0 &&
+            {
               images.length <= 0 &&
               !loadSample && (
                 <>

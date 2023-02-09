@@ -30,8 +30,8 @@ const ReProcess: FC<{
   };
 
   return (
-    <div>
-      <Button onClick={handleReprocess}>Reprocess {imageType}</Button>
+    <div className=" font-normal">
+     Not what youre looking for ? <button className=" font-bold underline " onClick={handleReprocess}>Reprocess {imageType}</button>
     </div>
   );
 };

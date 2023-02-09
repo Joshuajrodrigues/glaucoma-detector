@@ -3,15 +3,15 @@ import Button from "./Button";
 import useCropComplete from "../store/useCropComplete";
 import useSteps from "../store/useSteps";
 import useFundas from "../store/useFundas";
+import useSample from "../store/useSample";
 
 const CropScreen: FC<{
   previewCanvasRef: RefObject<HTMLCanvasElement>;
 }> = ({ previewCanvasRef }) => {
-
   const cropCompleteState = useCropComplete((state) => state);
-  const stepState = useSteps(s => s)
+  const stepState = useSteps((s) => s);
   const fundasState = useFundas((state) => state);
-
+  const setLoadSample = useSample((s) => s.setImage);
   const handleCrop = () => {
     let newSteps = stepState.steps;
     newSteps.push(4);
@@ -21,8 +21,12 @@ const CropScreen: FC<{
   };
   useEffect(() => {
     console.log("cropCompleteState", cropCompleteState);
-
-  }, [cropCompleteState])
+  }, [cropCompleteState]);
+  const handleReset=()=>{
+    stepState.setSteps([])
+    fundasState.setImage([])
+    setLoadSample(false)
+  }
   return (
     <>
       <p>Place region of interest in the square.</p>
@@ -46,6 +50,9 @@ const CropScreen: FC<{
           Crop
         </Button>
       )}
+      <div className=" font-normal">
+        <button className=" underline text-blue-500 "  onClick={handleReset}>Upload new</button>
+      </div>
     </>
   );
 };

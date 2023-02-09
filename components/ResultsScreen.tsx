@@ -3,12 +3,17 @@ import Button from "./Button";
 import useDisplayResult from "../store/useDisaplyResult";
 import useCdrCalculations, { ICodinates } from "../store/useCdrCalculation";
 import ReProcess from "./ReProcess";
-
+import useSteps from "../store/useSteps";
+import useFundas from "../store/useFundas"
+import useSample from "../store/useSample";
 const ResultsScreen = () => {
   const setImageToShow = useDisplayResult((S) => S.setImage);
-  const imageShown = useDisplayResult(s => s.imageToShow)
+  const setImages = useFundas((state) => state.setImage);
+  const setLoadSample = useSample((s) => s.setImage);
+  const imageShown = useDisplayResult((s) => s.imageToShow);
   const cupCal = useCdrCalculations((s) => s.cup);
   const diskCal = useCdrCalculations((s) => s.disk);
+  const setSteps = useSteps((state) => state.setSteps);
   const [cupArea, setCupArea] = useState(0);
   const [diskArea, setDiskArea] = useState(0);
   useEffect(() => {
@@ -18,7 +23,7 @@ const ResultsScreen = () => {
     }
     if (diskCal) {
       let dA = Math.abs(onDiskAreaChange(diskCal));
-      setDiskArea(dA)
+      setDiskArea(dA);
     }
   }, [cupCal, diskCal]);
 
@@ -41,6 +46,11 @@ const ResultsScreen = () => {
       ).toFixed(2)
     );
   };
+  const handleReset=()=>{
+    setSteps([])
+    setImages([])
+    setLoadSample(false)
+  }
   return (
     <>
       <div className="flex">
@@ -48,40 +58,31 @@ const ResultsScreen = () => {
         <Button onClick={() => setImageToShow("cup")}>Show Cup</Button>
         <Button onClick={() => setImageToShow("disk")}>Show Disk</Button>
       </div>
-      <div className=" flex flex-col font-bold mt-14">
-        <div>
-          Cup Area :{cupArea} px
-
-        </div>
-        <div>
-          Disk Area :{diskArea} px
-        </div>
+      <div className=" flex flex-col font-bold mt-7">
+        <div>Cup Area :{cupArea} px</div>
+        <div>Disk Area :{diskArea} px</div>
         <div>
           Estimated Cup To Disk Ratio (CDR) :
-          {isNaN((cupArea / diskArea)) ? "" : (cupArea / diskArea)?.toFixed(2)}
+          {isNaN(cupArea / diskArea) ? "" : (cupArea / diskArea)?.toFixed(2)}
         </div>
-        {
-          !isNaN((cupArea / diskArea)) &&
+        {!isNaN(cupArea / diskArea) && (
           <div>
-            {(cupArea / diskArea) >=0.5 ? 
-            <span className=" text-green-600">
-              Possible Glaucoma as CDR ratio &gt;= 0.5
-            </span>
-             :
-          <span className="text-orange-600">
-
-            Negative Glaucoma as CDR ratio &lt;= 0.5
-             </span>
-             
-             }
+            {cupArea / diskArea >= 0.5 ? (
+              <span className=" text-green-600">
+                Possible Glaucoma as CDR ratio &gt;= 0.5
+              </span>
+            ) : (
+              <span className="text-orange-600">
+                Negative Glaucoma as CDR ratio &lt;= 0.5
+              </span>
+            )}
           </div>
-        }
-        {
-          imageShown !== "current" &&
-          <ReProcess imageType={imageShown} />
-        }
+        )}
+        {imageShown !== "current" && <ReProcess imageType={imageShown} />}
+        <div className=" font-normal">
+        <button className=" mt-5 underline text-blue-500 "  onClick={handleReset}>Upload new</button>
+        </div>
       </div>
-
     </>
   );
 };
