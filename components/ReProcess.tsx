@@ -1,15 +1,39 @@
-import React, { FC } from 'react'
-import { ImageToShowType } from '../store/useDisaplyResult'
-import Button from './Button'
+import React, { FC } from "react";
+import { ImageToShowType } from "../store/useDisaplyResult";
+import Button from "./Button";
+import fuzzy from "../utils/fuzzy";
+import useProcessedData from "../store/useProcessedData";
 
 const ReProcess: FC<{
-    imageType: ImageToShowType
+  imageType: ImageToShowType;
 }> = ({ imageType }) => {
-    return (
-        <div>
-            <Button>Reprocess {imageType}</Button>
-        </div>
-    )
-}
+  const diskImageData = useProcessedData((s) => s.diskImageData);
+  const cupImageData = useProcessedData((s) => s.cupImageData);
+  const setImageData = useProcessedData((s) => s.setImageData);
+  const handleReprocess = () => {
+    if (imageType==="disk" && diskImageData) {
+      let cluster1 = new ImageData(
+        fuzzy(diskImageData.data).cluster1,
+        diskImageData.width,
+        diskImageData.height
+      );
+      setImageData("diskImageData", cluster1);
+    }
+    if (imageType==="cup" && cupImageData) {
+        let cluster1 = new ImageData(
+          fuzzy(cupImageData.data).cluster1,
+          cupImageData.width,
+          cupImageData.height
+        );
+        setImageData("cupImageData", cluster1);
+      }
+  };
 
-export default ReProcess
+  return (
+    <div>
+      <Button onClick={handleReprocess}>Reprocess {imageType}</Button>
+    </div>
+  );
+};
+
+export default ReProcess;

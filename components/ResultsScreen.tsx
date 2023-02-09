@@ -61,6 +61,22 @@ const ResultsScreen = () => {
           {isNaN((cupArea / diskArea)) ? "" : (cupArea / diskArea)?.toFixed(2)}
         </div>
         {
+          !isNaN((cupArea / diskArea)) &&
+          <div>
+            {(cupArea / diskArea) >=0.5 ? 
+            <span className=" text-green-600">
+              Possible Glaucoma as CDR ratio &gt;= 0.5
+            </span>
+             :
+          <span className="text-orange-600">
+
+            Negative Glaucoma as CDR ratio &lt;= 0.5
+             </span>
+             
+             }
+          </div>
+        }
+        {
           imageShown !== "current" &&
           <ReProcess imageType={imageShown} />
         }
