@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import Button from "./Button";
 import useDisplayResult from "../store/useDisaplyResult";
 import useCdrCalculations, { ICodinates } from "../store/useCdrCalculation";
+import ReProcess from "./ReProcess";
 
 const ResultsScreen = () => {
   const setImageToShow = useDisplayResult((S) => S.setImage);
+  const imageShown = useDisplayResult(s => s.imageToShow)
   const cupCal = useCdrCalculations((s) => s.cup);
   const diskCal = useCdrCalculations((s) => s.disk);
   const [cupArea, setCupArea] = useState(0);
@@ -49,16 +51,21 @@ const ResultsScreen = () => {
       <div className=" flex flex-col font-bold mt-14">
         <div>
           Cup Area :{cupArea} px
-          
+
         </div>
         <div>
           Disk Area :{diskArea} px
         </div>
         <div>
           Estimated Cup To Disk Ratio (CDR) :
-          {(cupArea/diskArea)?.toFixed(2)}
+          {isNaN((cupArea / diskArea)) ? "" : (cupArea / diskArea)?.toFixed(2)}
         </div>
+        {
+          imageShown !== "current" &&
+          <ReProcess imageType={imageShown} />
+        }
       </div>
+
     </>
   );
 };

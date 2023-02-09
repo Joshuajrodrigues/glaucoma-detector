@@ -14,7 +14,6 @@ import useSample from "../store/useSample";
 import useSteps from "../store/useSteps";
 import { canvasPreprocess } from "../utils/canvasPreprocessing";
 import fuzzy from "../utils/fuzzy";
-import { getImageCodinates } from "../utils/imageCodinates";
 import Button from "./Button";
 import Cropper from "./Cropper";
 import ProcessingCanvas from "./ProcessingCanvas";
@@ -92,8 +91,6 @@ const ImageContainer: FunctionComponent<{
     if (imageToShow === "cup") {
       let ctx = preprocessCanvasRef.current?.getContext("2d");
       if (cupImageData) {
-        getImageCodinates(preprocessCanvasRef.current, cupImageData.data)
-
         ctx?.putImageData(cupImageData, 0, 0);
       }
     } else if (imageToShow === "disk") {

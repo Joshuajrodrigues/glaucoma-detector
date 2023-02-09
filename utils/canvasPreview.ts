@@ -10,6 +10,7 @@ export async function canvasPreview(
   rotate = 0
 ) {
   const ctx = canvas.getContext("2d");
+  console.log("crop", crop);
 
   if (!ctx) {
     throw new Error("No 2d context");
