@@ -10,10 +10,6 @@ export default function fuzzy(imageData: Uint8ClampedArray) {
         pix[i + 3] = 0// make 0 for fuzzy
         greenpixelarr.push(pix[i + 1])
     }
-    // ctx.putImageData(imageData, 0, 0);
-
-    // number of clusters = 3
-    // number of strPts = 3-2 = 1
     let cStr = 0;
     let cMin = arrayMin(pix);
     let cMax = arrayMax(pix);
@@ -27,7 +23,6 @@ export default function fuzzy(imageData: Uint8ClampedArray) {
         cStr = median + Math.abs(median - cMin) / 2;
     }
 
-    // console.log({ cMax, cMin, cStr, median })
     for (let i = 0; i < pix.length; i++) {
         let greenPixel = pix[i + 1];
         let cminx = (greenPixel - cMin) ** 2;
