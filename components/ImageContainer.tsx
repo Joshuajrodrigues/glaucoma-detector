@@ -66,14 +66,16 @@ const ImageContainer: FunctionComponent<{
         if (steps.includes(4) && preprocessCanvasRef.current) {
           canvasPreprocess(img, preprocessCanvasRef.current).then(
             (imageData) => {
+
+              let result = fuzzy(imageData.data)
               let cup = new ImageData(
-                fuzzy(imageData.data).cluster1,
+                result.cluster1,
                 imageData.width,
                 imageData.height
               );
 
                 let disk = new ImageData(
-                  fuzzy(imageData.data).cluster2,
+                  result.cluster2,
                   imageData.width,
                   imageData.height
                 );
