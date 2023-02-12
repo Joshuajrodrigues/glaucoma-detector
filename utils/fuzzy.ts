@@ -42,11 +42,9 @@ export default function fuzzy(imageData: Uint8ClampedArray) {
         } else if (uc1 > uc3 && uc1 > uc2) {
             continue
         } else if (uc2 > uc1 && uc2 > uc3) {
-
             cluster1[i + 1] = greenPixel
             cluster1[i + 3] = 255;
         } else {
-     
             cluster2[i + 1] = greenPixel
             cluster2[i + 3] = 255;
         }
@@ -57,13 +55,13 @@ export default function fuzzy(imageData: Uint8ClampedArray) {
 
 
 function arrayMin(arr: Uint8ClampedArray) {
-    return arr.filter((i) => i !== 0).reduce(function (p, v) {
+    return arr.filter((i) => i !== 0)?.reduce(function (p, v) {
         return p < v ? p : v;
     });
 }
 
 function arrayMax(arr: Uint8ClampedArray) {
-    return arr.filter((i) => i !== 255).reduce(function (p, v) {
+    return arr.filter((i) => i !== 255)?.reduce(function (p, v) {
         return p > v ? p : v;
     });
 }
