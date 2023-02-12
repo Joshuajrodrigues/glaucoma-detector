@@ -2,17 +2,11 @@ import Head from "next/head";
 import { useEffect, useRef, useState } from "react";
 import CardContainer from "../components/CardContainer";
 import ImageContainer from "../components/ImageContainer";
-import { add } from "../wasm";
+
 
 export default function Home() {
   const imgRef = useRef<HTMLImageElement>(null);
   const [result, setResult] = useState(0);
-  useEffect(() => {
-    (async () => {
-      const res = await add(40, 2);
-      setResult(res);
-    })();
-  }, []);
 
   return (
     <>
@@ -26,7 +20,6 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <div>Wasm Loaded: {result ? result : "false"}</div>;
         <h1 className="text-3xl font-bold m-5">Glaucoma Detector</h1>
         <div className="md:flex md:h-full">
           <ImageContainer
