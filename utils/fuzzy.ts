@@ -15,8 +15,8 @@ export default function fuzzy(imageData: Uint8ClampedArray) {
     let cMax = arrayMax(pix);
     let median = findMedian(greenpixelarr)
 
-    let hypotCMinMedian = Math.hypot(cMin - median);
-    let hypotCMaxMedian = Math.hypot(cMax - median);
+    let hypotCMinMedian = Math.hypot(cMin , median);
+    let hypotCMaxMedian = Math.hypot(cMax , median);
     let absCMaxMedian = Math.abs(cMax - median);
     let absMedianCMin = Math.abs(median - cMin);
 
