@@ -1,10 +1,10 @@
 export default function fuzzy(imageData: Uint8ClampedArray) {
     let pix = imageData;
-
+    let len = pix.length;
     let cluster1 = new Uint8ClampedArray(pix.length).fill(0);
     let cluster2 = new Uint8ClampedArray(pix.length).fill(0);
     let greenpixelarr:number[] = []
-    for (var i = 0, n = pix.length; i < n; i += 4) {
+    for (var i = 0, n =len; i < n; i += 4) {
         pix[i] = 0;
         pix[i + 2] = 0;
         pix[i + 3] = 0// make 0 for fuzzy
@@ -15,15 +15,20 @@ export default function fuzzy(imageData: Uint8ClampedArray) {
     let cMax = arrayMax(pix);
     let median = findMedian(greenpixelarr)
 
-    if (Math.hypot(cMin - median) === Math.hypot(cMax - median)) {
+    let hypotCMinMedian = Math.hypot(cMin - median);
+    let hypotCMaxMedian = Math.hypot(cMax - median);
+    let absCMaxMedian = Math.abs(cMax - median);
+    let absMedianCMin = Math.abs(median - cMin);
+
+    if (hypotCMinMedian === hypotCMaxMedian) {
         cStr = median;
-    } else if (Math.hypot(cMin - median) < Math.hypot(cMax - median)) {
-        cStr = median + Math.abs(cMax - median) / 2;
-    } else if (Math.hypot(cMin - median) > Math.hypot(cMax - median)) {
-        cStr = median + Math.abs(median - cMin) / 2;
+    } else if (hypotCMinMedian < hypotCMaxMedian) {
+        cStr = median + absCMaxMedian / 2;
+    } else if (hypotCMinMedian > hypotCMaxMedian) {
+        cStr = median + absMedianCMin / 2;
     }
 
-    for (let i = 0; i < pix.length; i++) {
+    for (let i = 0; i < len; i++) {
         let greenPixel = pix[i + 1];
         let cminx = (greenPixel - cMin) ** 2;
         let cmaxx = (greenPixel - cMax) ** 2;

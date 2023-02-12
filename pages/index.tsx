@@ -1,15 +1,10 @@
 import Head from "next/head";
-import Image from "next/image";
-import { Inter } from "@next/font/google";
-import styles from "../styles/Home.module.css";
-import ImageContainer from "../components/ImageContainer";
-import { LegacyRef, useEffect, useRef, useState } from "react";
-import Card from "../components/Card";
+import { useEffect, useRef, useState } from "react";
 import CardContainer from "../components/CardContainer";
+import ImageContainer from "../components/ImageContainer";
 import { add } from "../wasm";
 
 export default function Home() {
-
   const imgRef = useRef<HTMLImageElement>(null);
   const [result, setResult] = useState(0);
   useEffect(() => {
@@ -18,7 +13,6 @@ export default function Home() {
       setResult(res);
     })();
   }, []);
-
 
   return (
     <>
@@ -31,18 +25,16 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main >
-      <div>Wasm Loaded: {result?result:"false"}</div>;
+      <main>
+        <div>Wasm Loaded: {result ? result : "false"}</div>;
         <h1 className="text-3xl font-bold m-5">Glaucoma Detector</h1>
         <div className="md:flex md:h-full">
-
-        <ImageContainer
-          imageRef={imgRef}
+          <ImageContainer
+            imageRef={imgRef}
             instructions="Drop Your Image Here Or"
-          multiple={false}
-
+            multiple={false}
           />
-        <CardContainer imageRef={imgRef} />
+          <CardContainer imageRef={imgRef} />
         </div>
       </main>
     </>
