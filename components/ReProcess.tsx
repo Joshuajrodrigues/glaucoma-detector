@@ -1,58 +1,90 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { ImageToShowType } from "../store/useDisaplyResult";
 import Button from "./Button";
 import fuzzy from "../utils/fuzzy";
 import useProcessedData from "../store/useProcessedData";
 import ClusterSelector from "./ClusterSelector";
 
+type ISelectedCluster =
+    "original" |
+    "cluster1" |
+    "cluster2"
+
 
 
 const ReProcess: FC<{
     imageType: ImageToShowType;
-}> = ({ imageType }) => {
-    const diskImageData = useProcessedData((s) => s.diskImageData);
-    const cupImageData = useProcessedData((s) => s.cupImageData);
+    imageData?: ImageData;
+    reprocessCb: (imageType: ImageToShowType) => void;
+    isReprocessed: boolean
+}> = ({ imageType, imageData, reprocessCb, isReprocessed }) => {
     const setImageData = useProcessedData((s) => s.setImageData);
-    const [selectedClusterCup, setSelectedClusterCup] = useState('c1')
-    const [selectedClusterDisk, setSelectedClusterDisk] = useState('d1')
-    const [isReprocessed, setIsReprocessed] = useState(false)
+    const [selectedCluster, setSelectedCluster] = useState<ISelectedCluster>('original')
+    const [originalImage, setOriginalImage] = useState<Uint8ClampedArray | []>([])
+    const [clusterOneImage, setClusterOneImage] = useState<Uint8ClampedArray | []>([])
+    const [clusterTwoImage, setClusterTwoImage] = useState<Uint8ClampedArray | []>([])
     const handleReprocess = () => {
-        if (imageType === "disk" && diskImageData) {
-            let cluster1 = new ImageData(
-                fuzzy(diskImageData.data).cluster1,
-                diskImageData.width,
-                diskImageData.height
-            );
-            setImageData("diskImageData", cluster1);
+
+        reprocessCb(imageType)
+        if (imageData) {
+            let reusult = fuzzy(imageData.data)
+            setOriginalImage(imageData.data)
+            setClusterOneImage(reusult.cluster1)
+            setClusterTwoImage(reusult.cluster2)
         }
-        if (imageType === "cup" && cupImageData) {
-            let cluster1 = new ImageData(
-                fuzzy(cupImageData.data).cluster1,
-                cupImageData.width,
-                cupImageData.height
-            );
-            setImageData("cupImageData", cluster1);
-        }
-        setIsReprocessed(true)
+        // setIsReprocessed(true)
     };
 
     const handleClusterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event) {
-            if (imageType === "cup") {
-
-                setSelectedClusterCup(event.target.value);
-            } else if (imageType === "disk") {
-                setSelectedClusterDisk(event.target.value)
-            }
+            // @ts-ignore
+            setSelectedCluster(event.target.value);
         }
     }
 
+    const applyCluster = (cluster: Uint8ClampedArray) => {
+        let newImageData = new ImageData(
+            cluster,
+            imageData?.width || 0,
+            imageData?.height || 0
+        );
+        if (imageType === "disk") {
+            setImageData("diskImageData", newImageData);
+        } else {
+            setImageData("cupImageData", newImageData);
+        }
+    }
+    useEffect(() => {
+        console.log({ originalImage, clusterOneImage, clusterTwoImage })
+
+        if (selectedCluster === "cluster1" && clusterOneImage.length > 0) {
+            applyCluster(clusterOneImage as Uint8ClampedArray)
+        } else if (selectedCluster === "cluster2" && clusterTwoImage.length > 0) {
+            applyCluster(clusterTwoImage as Uint8ClampedArray)
+        } else if (selectedCluster === "original" && originalImage.length > 0) {
+            applyCluster(originalImage as Uint8ClampedArray)
+        }
+    }, [selectedCluster])
     return (
         <div className=" font-normal">
             Not what youre looking for ? <button className=" font-bold underline " onClick={handleReprocess}>Reprocess {imageType}</button>
             {
                 isReprocessed &&
-                <ClusterSelector imageType={imageType} handleClusterChange={handleClusterChange} />
+                <form>
+                    <div>
+                        <input onChange={handleClusterChange} type="radio" id="original" name="cluster" value="original" checked={selectedCluster === "original"} />
+                        <label htmlFor={"original"}>Original</label>
+                    </div>
+                    <div>
+                        <input onChange={handleClusterChange} type="radio" id="cluster1" name="cluster" value="cluster1" checked={selectedCluster === "cluster1"} />
+                        <label htmlFor={"cluster1"}>Cluster 1</label>
+                    </div>
+
+                    <div>
+                        <input onChange={handleClusterChange} type="radio" id="cluster2" name="cluster" value="cluster2" checked={selectedCluster === "cluster2"} />
+                        <label htmlFor={"cluster2"}>Cluster 2</label>
+                    </div>
+                </form>
             }
         </div>
     );

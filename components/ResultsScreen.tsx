@@ -6,16 +6,23 @@ import ReProcess from "./ReProcess";
 import useSteps from "../store/useSteps";
 import useFundas from "../store/useFundas"
 import useSample from "../store/useSample";
+import useProcessedData from "../store/useProcessedData";
 const ResultsScreen = () => {
   const setImageToShow = useDisplayResult((S) => S.setImage);
   const setImages = useFundas((state) => state.setImage);
   const setLoadSample = useSample((s) => s.setImage);
+  const diskImageData = useProcessedData((s) => s.diskImageData);
+  const cupImageData = useProcessedData((s) => s.cupImageData);
   const imageShown = useDisplayResult((s) => s.imageToShow);
   const cupCal = useCdrCalculations((s) => s.cup);
   const diskCal = useCdrCalculations((s) => s.disk);
   const setSteps = useSteps((state) => state.setSteps);
   const [cupArea, setCupArea] = useState(0);
   const [diskArea, setDiskArea] = useState(0);
+  const [isReprocessed, setIsReprocessed] = useState({
+    cup: false,
+    disk: false
+  })
   useEffect(() => {
     if (cupCal) {
       let cA = Math.abs(onCupAreaChange(cupCal));
@@ -78,7 +85,12 @@ const ResultsScreen = () => {
             )}
           </div>
         )}
-        {imageShown !== "current" && <ReProcess imageType={imageShown} />}
+        {imageShown !== "current" && <ReProcess
+          imageType={imageShown}
+          imageData={imageShown === "cup" ? cupImageData : diskImageData}
+          reprocessCb={(img) => setIsReprocessed((prev) => ({ ...prev, [img]: true }))}
+          isReprocessed={imageShown === "cup" ? isReprocessed.cup : imageShown === "disk" ? isReprocessed.disk : false}
+        />}
         <div className=" font-normal">
         <button className=" mt-5 underline text-blue-500 "  onClick={handleReset}>Upload new</button>
         </div>
