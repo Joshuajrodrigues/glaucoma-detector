@@ -17,9 +17,9 @@ import fuzzy from "../utils/fuzzy";
 import Button from "./Button";
 import Cropper from "./Cropper";
 import ProcessingCanvas from "./ProcessingCanvas";
-import WorkerBuilder from '../utils/worker-builder'
-import Worker from '../utils/fuzzy.worker'
-const instance = new WorkerBuilder(Worker)
+// import WorkerBuilder from '../utils/worker-builder'
+// import Worker from '../utils/fuzzy.worker'
+// const instance = new WorkerBuilder(Worker)
 const MAX_SIZE = 16270840;
 type Files = { [key: string]: File };
 const ImageContainer: FunctionComponent<{
@@ -68,15 +68,12 @@ const ImageContainer: FunctionComponent<{
         if (steps.includes(4) && preprocessCanvasRef.current) {
           canvasPreprocess(img, preprocessCanvasRef.current).then(
             (imageData) => {
-              instance.postMessage(imageData.data)
-              instance.onmessage = (event) => {
-                let result = event.data
+              let result = fuzzy(imageData.data)
                 let cup = new ImageData(
                   result.cluster1,
                   imageData.width,
                   imageData.height
                 );
-
                 let disk = new ImageData(
                   result.cluster2,
                   imageData.width,
@@ -85,7 +82,7 @@ const ImageContainer: FunctionComponent<{
                 setImageData("imageData", img);
                 setImageData("cupImageData", cup);
                 setImageData("diskImageData", disk);
-              }
+
             }
             );
           }
