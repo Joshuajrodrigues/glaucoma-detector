@@ -3,6 +3,7 @@ export default function fuzzy(imageData: Uint8ClampedArray) {
     let len = pix.length;
     let cluster1 = new Uint8ClampedArray(pix.length).fill(0);
     let cluster2 = new Uint8ClampedArray(pix.length).fill(0);
+    let cluster3 = new Uint8ClampedArray(pix.length).fill(0);
     let greenpixelarr:number[] = []
     for (var i = 0, n =len; i < n; i += 4) {
         pix[i] = 0;
@@ -40,7 +41,8 @@ export default function fuzzy(imageData: Uint8ClampedArray) {
         if (isNaN(uc1) || isNaN(uc2) || isNaN(uc3)) {
             continue
         } else if (uc1 > uc3 && uc1 > uc2) {
-            continue
+            cluster3[i + 1] = greenPixel
+            cluster3[i + 3] = 255;
         } else if (uc2 > uc1 && uc2 > uc3) {
             cluster1[i + 1] = greenPixel
             cluster1[i + 3] = 255;
@@ -50,7 +52,7 @@ export default function fuzzy(imageData: Uint8ClampedArray) {
         }
     }
 
-    return { cluster1, cluster2 }
+    return { cluster1, cluster2, cluster3 }
 }
 
 

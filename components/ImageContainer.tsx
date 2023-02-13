@@ -155,7 +155,7 @@ const ImageContainer: FunctionComponent<{
     <section className="md:w-1/2">
       <div
         className={`flex 
-        bg-white 
+       bg-purple-50
         justify-center 
         items-center 
         h-96 md:w-96 

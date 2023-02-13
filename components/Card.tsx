@@ -16,7 +16,7 @@ const Card: FunctionComponent<{
 
   return (
     <div
-      className={`flex flex-col items-center absolute bg-white h-96 ${
+      className={`flex flex-col items-center absolute  bg-purple-50 h-96 ${
         index === 0
           ? "top-0"
           : index === 1
