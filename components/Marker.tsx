@@ -26,7 +26,9 @@ const Marker: FC<{
   useEffect(()=>{
     markerPostion(square)
   },[square])
-
+  useEffect(()=>{
+    setSquare(startPos)
+  },[startPos])
   useEffect(() => {
     document.addEventListener("mouseup", handleMouseUp);
     document.addEventListener("touchend", handleTouchEnd)
@@ -118,7 +120,7 @@ const Marker: FC<{
           direction === "horizontal" ? "w-8 h-6 bg-blue-500" : "w-6 h-8 bg-red-500"
         }  absolute text-white  text-center `}
       >
-        {square}
+        {/* {square} */}
       </span>
     </div>
   );

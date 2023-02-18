@@ -3,19 +3,18 @@ import Marker from "./Marker";
 import useDisplayResult from "../store/useDisaplyResult";
 import useCdrCalculations from "../store/useCdrCalculation";
 
-const ProcessingCanvas:FC<{
-    preprocessCanvasRef:any
-}> = ({
-    preprocessCanvasRef
-}) => {
-    const displayResultState = useDisplayResult((s) => s);
-    const cdrCalculationsState = useCdrCalculations((s) => s);
+const ProcessingCanvas: FC<{
+  preprocessCanvasRef: any;
+}> = ({ preprocessCanvasRef }) => {
+  const displayResultState = useDisplayResult((s) => s);
+  const cdrCalculationsState = useCdrCalculations((s) => s);
   return (
     <>
       <div>
         {displayResultState.imageToShow !== "current" && (
           <>
             <Marker
+              startPos={60}
               limit={preprocessCanvasRef.current?.clientWidth}
               markerPostion={(pos) => {
                 displayResultState.imageToShow === "cup"
@@ -24,6 +23,7 @@ const ProcessingCanvas:FC<{
               }}
             />
             <Marker
+              startPos={100}
               limit={preprocessCanvasRef.current?.clientWidth}
               markerPostion={(pos) => {
                 displayResultState.imageToShow === "cup"
@@ -32,6 +32,7 @@ const ProcessingCanvas:FC<{
               }}
             />
             <Marker
+              startPos={60}
               direction="verticle"
               limit={preprocessCanvasRef.current?.clientHeight}
               markerPostion={(pos) => {
@@ -41,6 +42,7 @@ const ProcessingCanvas:FC<{
               }}
             />
             <Marker
+              startPos={250}
               direction="verticle"
               limit={preprocessCanvasRef.current?.clientHeight}
               markerPostion={(pos) => {
@@ -63,7 +65,6 @@ const ProcessingCanvas:FC<{
             //orderRadius: "50%"
           }}
         ></canvas>
-
       </div>
     </>
   );
