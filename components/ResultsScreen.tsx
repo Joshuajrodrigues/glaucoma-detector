@@ -70,9 +70,9 @@ const ResultsScreen = () => {
         <div>Disk Area :{diskArea} px</div>
         <div>
           Estimated Cup To Disk Ratio (CDR) :
-          {isNaN(cupArea / diskArea) ? "" : (cupArea / diskArea)?.toFixed(2)}
+          {(isNaN(cupArea / diskArea) || diskArea === 0) ? "" : (cupArea / diskArea)?.toFixed(2)}
         </div>
-        {!isNaN(cupArea / diskArea) && (
+        {(!isNaN(cupArea / diskArea )&& diskArea !== 0) && (
           <div>
             {cupArea / diskArea >= 0.5 ? (
               <span className=" text-green-600">
