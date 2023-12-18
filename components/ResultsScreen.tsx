@@ -7,7 +7,6 @@ import useSteps from "../store/useSteps";
 import useFundas from "../store/useFundas"
 import useSample from "../store/useSample";
 import useProcessedData from "../store/useProcessedData";
-import PillColapse from "./PillColapse";
 const ResultsScreen = () => {
   const setImageToShow = useDisplayResult((S) => S.setImage);
   const setImages = useFundas((state) => state.setImage);
@@ -62,14 +61,13 @@ const ResultsScreen = () => {
   return (
     <>
       <div className="flex">
-        {/* <Button onClick={() => setImageToShow("current")}>Original</Button> */}
-      </div>
-      <div>
-        <PillColapse handleCalculateCallback={() => setImageToShow("cup")} area={cupArea} title="Cup" />
-        <PillColapse handleCalculateCallback={() => setImageToShow("disk")} area={diskArea} title="Disk" />
+        <Button onClick={() => setImageToShow("current")}>Original</Button>
+        <Button onClick={() => setImageToShow("cup")}>Show Cup</Button>
+        <Button onClick={() => setImageToShow("disk")}>Show Disk</Button>
       </div>
       <div className=" flex flex-col font-bold mt-7">
-
+        <div>Cup Area :{cupArea} px</div>
+        <div>Disk Area :{diskArea} px</div>
         <div>
           Estimated Cup To Disk Ratio (CDR) :
           {isNaN(cupArea / diskArea) ? "" : (cupArea / diskArea)?.toFixed(2)}

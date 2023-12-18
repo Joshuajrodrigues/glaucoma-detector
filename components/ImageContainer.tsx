@@ -6,7 +6,6 @@ import React, {
   useState,
 } from "react";
 import "react-image-crop/dist/ReactCrop.css";
-import useClustersCup from "../store/useClustersCup";
 import useCropComplete from "../store/useCropComplete";
 import useDisplayResult from "../store/useDisaplyResult";
 import useFundas from "../store/useFundas";
@@ -52,7 +51,6 @@ const ImageContainer: FunctionComponent<{
   const diskImageData = useProcessedData((s) => s.diskImageData);
   const imageData = useProcessedData((s) => s.imageData);
   const loadSample = useSample((s) => s.load);
-  const setClusters = useClustersCup(s => s.setClusters)
   const handleUploadBtnClick = () => {
     fileInputRef.current?.click();
   };
@@ -70,12 +68,7 @@ const ImageContainer: FunctionComponent<{
         if (steps.includes(4) && preprocessCanvasRef.current) {
           canvasPreprocess(img, preprocessCanvasRef.current).then(
             (imageData) => {
-              let originalData = structuredClone(imageData)
               let result = fuzzy(imageData.data)
-              setClusters("original", originalData.data)
-              setClusters("cluster1", result.cluster1)
-              setClusters("cluster2", result.cluster2)
-              setClusters("cluster3", result.cluster3)
                 let cup = new ImageData(
                   result.cluster1,
                   imageData.width,
